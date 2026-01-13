@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Hotable Chatbot</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-container { width: 400px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 600px; }
+        .header { background: #00cba9; color: white; padding: 15px; font-weight: bold; text-align: center; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; line-height: 1.4; font-size: 14px; }
+        .bot { background: #f1f1f1; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { background: #00cba9; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button { padding: 10px 20px; background: #00cba9; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #00b395; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">Hotable AI Assistant 🤖</div>
+    <div class="messages" id="messages">
+        <div class="message bot">Cześć! Jestem Twoim doradcą kulinarnym. 🍕<br>Szukasz kuchni (np. Polskiej) czy konkretnego lokalu?</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Napisz wiadomość..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">Wyślij</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        // 1. Dodaj wiadomość użytkownika
+        addMessage(text, 'user');
+        input.value = '';
+
+        // 2. Wyślij do Twojego Pythona
+        try {
+            const response = await fetch('http://127.0.0.1:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await response.json();
+            
+            // 3. Dodaj odpowiedź bota
+            addMessage(data.response, 'bot');
+        } catch (error) {
+            addMessage("❌ Błąd połączenia z serwerem. Czy plik app.py jest uruchomiony?", 'bot');
+        }
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        div.innerHTML = text; // Używamy innerHTML, żeby działały tagi <br> i <b>
+        document.getElementById('messages').appendChild(div);
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+
+    function handleEnter(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+</script>
+
+</body>
+</html>

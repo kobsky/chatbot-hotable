@@ -1,0 +1,14 @@
+# Środowisko wirtualne
+venv/
+env/
+
+# Pliki konfiguracyjne z sekretami
+.env
+
+# Pliki tymczasowe Pythona
+__pycache__/
+*.py[cod]
+
+# Systemowe (opcjonalnie, np. dla Mac/Windows)
+.DS_Store
+Thumbs.db
