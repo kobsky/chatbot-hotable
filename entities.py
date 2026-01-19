@@ -9,6 +9,7 @@ KW_CUISINE = {
     "polską": "Polska",
     "polskiej": "Polska",
     "polski": "Polska",
+    "a polska": "Polska",
 
     # StreetFood (Neon)
     "streetfood": "StreetFood",
@@ -19,6 +20,7 @@ KW_CUISINE = {
     "amerykańska": "StreetFood",
     "burgera": "StreetFood",
     "street food": "StreetFood",
+    "a streetfood": "StreetFood",
 
     # Śródziemnomorska (Porto Azzurro)
     "śródziemnomorska": "Śródziemnomorska",
@@ -32,7 +34,8 @@ KW_CUISINE = {
     "italii": "Śródziemnomorska",
     "włoską": "Śródziemnomorska",
     "włoskiej": "Śródziemnomorska",
-    "wloskiej": "Śródziemnomorska"
+    "wloskiej": "Śródziemnomorska",
+    "a włoska": "Śródziemnomorska"
 }
 
 
@@ -41,17 +44,25 @@ KW_RESTAURANTS = {
     "neon": "Neon",
     "neonie": "Neon",
     "urban kitchen": "Neon",
+    "a w neon": "Neon", 
+    "w neonie": "Neon", 
+    "do neonu": "Neon",
 
     # Zielnik
     "zielnik": "Zielnik",
     "zielniku": "Zielnik",
     "zielnika": "Zielnik",
+    "a w zielnik": "Zielnik", 
+    "w zielniku": "Zielnik", 
+    "do zielnika": "Zielnik",
 
     # Porto Azzurro
     "porto": "Porto Azzurro",
     "azzurro": "Porto Azzurro",
     "porto azzurro": "Porto Azzurro",
-    "u włocha": "Porto Azzurro"
+    "u włocha": "Porto Azzurro",
+    "a w porto": "Porto Azzurro", 
+    "w porto azzurro": "Porto Azzurro"
 }
 
 RESTAURANT_DESCRIPTIONS = {
