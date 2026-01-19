@@ -2,70 +2,205 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Test Hotable Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotable Chatbot MVP</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .chat-container { width: 400px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 600px; }
-        .header { background: #00cba9; color: white; padding: 15px; font-weight: bold; text-align: center; }
-        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; line-height: 1.4; font-size: 14px; }
-        .bot { background: #f1f1f1; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .user { background: #00cba9; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-        button { padding: 10px 20px; background: #00cba9; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #00b395; }
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --primary-orange: #F27A1A;
+            --bot-bubble: #2D2D2D;
+            --text-white: #FFFFFF;
+            --text-grey: #A1A1AA;
+            --green-status: #10B981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .chat-header {
+            background-color: #252525;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: var(--green-status);
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 10px;
+            box-shadow: 0 0 5px var(--green-status);
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #1E1E1E;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background-color: var(--bot-bubble);
+            color: #E0E0E0;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .user-message {
+            background-color: var(--primary-orange);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background-color: #252525;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #333;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #121212;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary-orange);
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #d6630e;
+        }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
-    <div class="header">Hotable AI Assistant 🤖</div>
-    <div class="messages" id="messages">
-        <div class="message bot">Cześć! Jestem Twoim doradcą kulinarnym. 🍕<br>Szukasz kuchni (np. Polskiej) czy konkretnego lokalu?</div>
+    <div class="chat-header">
+        <h3>Hotable AI <span class="status-dot"></span></h3>
+    </div>
+    <div class="chat-box" id="chat-box">
+        <div class="message bot-message">
+            Cześć! Tu Hotable AI. 🍕<br>Pomogę Ci znaleźć stolik lub wybrać kuchnię. Wpisz np. "Szukam włoskiej".
+        </div>
     </div>
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="Napisz wiadomość..." onkeypress="handleEnter(event)">
+        <input type="text" id="user-input" placeholder="Napisz wiadomość..." onkeypress="handleKeyPress(event)">
         <button onclick="sendMessage()">Wyślij</button>
     </div>
 </div>
 
 <script>
     async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const text = input.value.trim();
-        if (!text) return;
+        let inputField = document.getElementById("user-input");
+        let message = inputField.value.trim();
+        if (message === "") return;
 
-        // 1. Dodaj wiadomość użytkownika
-        addMessage(text, 'user');
-        input.value = '';
+        // Dodaj wiadomość użytkownika
+        addMessage(message, "user-message");
+        inputField.value = "";
 
-        // 2. Wyślij do Twojego Pythona
+        // Pokaż indicator pisania (opcjonalne, dla efektu)
+        // ...
+
         try {
-            const response = await fetch('http://127.0.0.1:5000/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+            let response = await fetch("[http://127.0.0.1:5000/chat](http://127.0.0.1:5000/chat)", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
             });
-            const data = await response.json();
+            let data = await response.json();
             
-            // 3. Dodaj odpowiedź bota
-            addMessage(data.response, 'bot');
+            // Obsługa formatowania nowej linii
+            let formattedResponse = data.response.replace(/
+/g, '<br>');
+            addMessage(formattedResponse, "bot-message");
         } catch (error) {
-            addMessage("❌ Błąd połączenia z serwerem. Czy plik app.py jest uruchomiony?", 'bot');
+            addMessage("Błąd połączenia z serwerem 😞", "bot-message");
         }
     }
 
-    function addMessage(text, sender) {
-        const div = document.createElement('div');
-        div.className = `message ${sender}`;
-        div.innerHTML = text; // Używamy innerHTML, żeby działały tagi <br> i <b>
-        document.getElementById('messages').appendChild(div);
-        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    function addMessage(text, className) {
+        let chatBox = document.getElementById("chat-box");
+        let msgDiv = document.createElement("div");
+        msgDiv.className = `message ${className}`;
+        msgDiv.innerHTML = text; // Używamy innerHTML dla obsługi <br> i boldowania
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function handleEnter(e) {
-        if (e.key === 'Enter') sendMessage();
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
     }
 </script>
 
