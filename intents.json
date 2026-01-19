@@ -7,12 +7,12 @@
     },
     {
       "tag": "search_cuisine",
-      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?"],
+      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Azjatycka", "Burger", "Pizza"],
       "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
     {
       "tag": "check_seats",
-      "patterns": ["Czy restauracja ma wolny stolik?", "Ile jest wolnych stolików?", "Są miejsca?", "Czy w Zielniku jest wolny stolik?", "Sprawdź dostępność w Urban Kitchen"],
+      "patterns": ["Czy restauracja ma wolny stolik?", "Ile jest wolnych stolików?", "Są miejsca?", "Czy w Zielniku jest wolny stolik?", "Sprawdź dostępność w Urban Kitchen", "Miejsca", "Stolik", "Wolne"],
       "responses": ["Sprawdzam dostępność...", "Już weryfikuję liczbę wolnych stolików."]
     },
     {

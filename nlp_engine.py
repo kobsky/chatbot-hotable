@@ -58,7 +58,7 @@ class ChatbotBrain:
         # Debug print (pomocny przy testach)
         print(f"DEBUG: Text='{text}', Max Proba={max_proba:.2f}, Intent={self.model.classes_[best_intent_index]}")
 
-        if max_proba < 0.6:
+        if max_proba < 0.25:
             return "fallback"
         else:
             return self.model.classes_[best_intent_index]
