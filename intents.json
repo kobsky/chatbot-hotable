@@ -7,7 +7,7 @@
     },
     {
       "tag": "search_cuisine",
-      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Azjatycka", "Burger", "Pizza"],
+      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza"],
       "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
     {
@@ -21,7 +21,7 @@
     },
     {
       "tag": "restaurant_info",
-      "patterns": ["Neon", "A w Neon?", "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Jaki klimat ma Zielnik?", "Zielnik", "Porto Azzurro", "Opis restauracji Neon", "A Zielnik?"],
+      "patterns": ["Neon", "A w Neon?", "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Jaki klimat ma Zielnik?", "Zielnik", "Porto Azzurro", "Opis restauracji Neon", "A Zielnik?", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Więcej informacji"],
       "responses": [""]
     },
     {
@@ -31,6 +31,11 @@
     {
       "tag": "check_capacity",
       "patterns": ["Ile mają stolików?", "Czy to duży lokal?", "Jaka jest pojemność Neonu?", "Dużo macie miejsca?", "Maksymalna liczba gości"]
+    },
+    {
+        "tag": "unavailable_cuisine",
+        "patterns": ["Francuska", "Francuskiej", "Francuskiego", "Coś francuskiego", "Zjadłbym kuchnię francuską", "Chińska", "Chińskiej", "Chińczyka", "Azjatycka", "Sushi", "Japońska", "Meksykańska", "Indyjska", "Kebab", "Turecka", "Amerykańska"],
+        "responses": ["Niestety nie mamy tej kuchni w bazie. Aktualnie dostępne kuchnie to: Polska, StreetFood i Włoska. Mogę zaproponować restaurację z którejś z tych kuchni?"]
     },
     {
       "tag": "fallback",
