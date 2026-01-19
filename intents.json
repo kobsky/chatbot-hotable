@@ -7,7 +7,16 @@
     },
     {
       "tag": "search_cuisine",
-      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza"],
+      "patterns": [
+        "Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza",
+        "a z kuchni streetfood",
+        "streetfood",
+        "street food",
+        "kuchnia uliczna",
+        "zjadłbym burgera",
+        "coś szybkiego",
+        "szukam streetfoodu"
+      ],
       "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
     {
@@ -21,12 +30,24 @@
     },
     {
       "tag": "restaurant_info",
-      "patterns": ["Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik"],
+      "patterns": [
+        "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik",
+        "restauracja Neon?",
+        "Neon",
+        "co wies o neonie?",
+        "opisz neon",
+        "a neon?",
+        "knajpa neon"
+      ],
       "responses": [""]
     },
     {
       "tag": "check_contact",
-      "patterns": ["Jaki jest numer do Neonu?", "Podaj adres Zielnika", "Gdzie jest Porto Azzurro?", "Kontakt do restauracji", "Jak dojadę?", "Numer telefonu", "Gdzie to jest?", "Jaki ma adres?", "Podaj mi adres", "Jaki jest adres?", "Gdzie to jest dokładnie?", "Jaki tam jest numer?", "Numer telefonu poproszę", "Podaj adres", "Gdzie to jest?", "Jaki jest numer?", "Adres poproszę"]
+      "patterns": [
+        "Jaki jest numer do Neonu?", "Podaj adres Zielnika", "Gdzie jest Porto Azzurro?", "Kontakt do restauracji", "Jak dojadę?", "Numer telefonu", "Gdzie to jest?", "Jaki ma adres?", "Podaj mi adres", "Jaki jest adres?", "Gdzie to jest dokładnie?", "Jaki tam jest numer?", "Numer telefonu poproszę", "Podaj adres", "Gdzie to jest?", "Jaki jest numer?", "Adres poproszę",
+        "adres neonu",
+        "telefon do neonu"
+      ]
     },
     {
       "tag": "check_capacity",

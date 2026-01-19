@@ -14,13 +14,15 @@ KW_CUISINE = {
 
     # StreetFood (Neon)
     "streetfood": "StreetFood",
+    "street food": "StreetFood",
+    "streetfoodu": "StreetFood",
+    "uliczna": "StreetFood",
     "burger": "StreetFood",
     "burgery": "StreetFood",
     "fast food": "StreetFood",
     "frytki": "StreetFood",
     "amerykańska": "StreetFood",
     "burgera": "StreetFood",
-    "street food": "StreetFood",
     "a streetfood": "StreetFood",
 
     # Śródziemnomorska (Porto Azzurro)
@@ -44,6 +46,8 @@ KW_RESTAURANTS = {
     # Neon
     "neon": "Neon",
     "neonie": "Neon",
+    "neonu": "Neon",
+    "restauracja neon": "Neon",
     "urban kitchen": "Neon",
     "a w neon": "Neon", 
     "w neonie": "Neon", 
