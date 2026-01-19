@@ -39,19 +39,39 @@ def chat():
     if restaurant_name:
         CONTEXT["last_restaurant"] = restaurant_name  # Aktualizuj pamięć
     else:
-        restaurant_name = CONTEXT["last_restaurant"]  # Użyj pamięci
+        restaurant_name = CONTEXT.get("last_restaurant")  # Użyj pamięci
 
     # 2. Logika Biznesowa (Router intencji)
     if intent == "list_restaurants":
         response_text = (
             "Aktualnie współpracujemy z 3 wyjątkowymi lokalami:\n"
-            "1. 🍔 **Neon** (StreetFood & Bary)"
-            "2. 🍝 **Porto Azzurro** (Śródziemnomorska)"
-            "3. 🥗 **Zielnik** (Polska & Nowoczesna)"
+            "1. 🍔 **Neon** (StreetFood & Bary)\n"
+            "2. 🍝 **Porto Azzurro** (Śródziemnomorska)\n"
+            "3. 🥗 **Zielnik** (Polska & Nowoczesna)\n\n"
             "O którym z nich chcesz dowiedzieć się więcej?"
         )
         return jsonify({"response": response_text})
-        
+
+    if intent == "check_seats":
+        # Obsługa kontekstu (jeśli nie wykryto w wiadomości, weź z pamięci)
+        if not restaurant_name and CONTEXT.get("last_restaurant"):
+            restaurant_name = CONTEXT["last_restaurant"]
+
+        if restaurant_name:
+            # Pobieramy dane z bazy (symulacja lub realne wywołanie)
+            # Używamy check_availability, bo jest to dedykowana metoda
+            target = db.check_availability(restaurant_name)
+            
+            if target:
+                count = target.get('available_tables', 0)
+                # Zapisz w kontekście na wszelki wypadek
+                CONTEXT["last_restaurant"] = restaurant_name
+                return jsonify({"response": f"W restauracji {restaurant_name} są obecnie {count} wolne miejsca."})
+            else:
+                return jsonify({"response": f"Nie znalazłem danych dla restauracji {restaurant_name}."})
+        else:
+             return jsonify({"response": "W której restauracji sprawdzić liczbę wolnych miejsc? (Neon, Zielnik, Porto Azzurro)"})
+
     if intent == "restaurant_info":
         # Próba pobrania z kontekstu, jeśli nie ma w wiadomości
         if not restaurant_name and CONTEXT.get("last_restaurant"):
@@ -110,21 +130,6 @@ def chat():
         else:
             # Bot zrozumiał intencję, ale nie wyłapał nazwy kuchni
             response_text = "Jasne, chętnie coś polecę. Ale na jaką kuchnię masz ochotę? (np. Polska, Włoska, StreetFood)"
-
-    # --- SCENARIUSZ 2: Sprawdzanie dostępności ---
-    elif intent == 'check_seats':
-        if restaurant_name:
-            result = db.check_availability(restaurant_name)
-            if result:
-                seats = result['available_tables']
-                if seats > 0:
-                    response_text = f"Tak! W lokalu <b>{result['name']}</b> mamy jeszcze <b>{seats} wolnych stolików</b>. 🔥 Wpadajcie!"
-                else:
-                    response_text = f"Niestety, <b>{result['name']}</b> jest teraz pełny. 😔 Może poszukamy czegoś innego?"
-            else:
-                response_text = f"Nie mogę znaleźć restauracji '{restaurant_name}' w bazie. Upewnij się, że wpisałeś poprawną nazwę."
-        else:
-            response_text = "Mogę sprawdzić dostępność, ale musisz podać nazwę restauracji (np. Zielnik, Neon)."
 
     # --- RESZTA (Powitanie / Fallback) ---
     else:

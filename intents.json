@@ -21,8 +21,15 @@
     },
     {
       "tag": "check_seats",
-      "patterns": ["Czy restauracja ma wolny stolik?", "Ile jest wolnych stolików?", "Są miejsca?", "Czy w Zielniku jest wolny stolik?", "Sprawdź dostępność w Urban Kitchen", "Miejsca", "Stolik", "Wolne"],
-      "responses": ["Sprawdzam dostępność...", "Już weryfikuję liczbę wolnych stolików."]
+      "patterns": [
+          "Ile jest wolnych miejsc w Porto Azzurro?",
+          "Ile jest wolnych miejsc?",
+          "Ile wolnych stolików ma Zielnik?",
+          "Stan miejsc w Neonie",
+          "Sprawdź dostępność",
+          "Czy są wolne miejsca?"
+      ],
+      "responses": []
     },
     {
       "tag": "check_hours",
