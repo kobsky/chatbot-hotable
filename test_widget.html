@@ -31,11 +31,11 @@
             height: 600px;
             background-color: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px var(--primary-orange), 0 0 60px rgba(242, 122, 26, 0.4);
+            border: 1px solid var(--primary-orange);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid #333;
         }
 
         .chat-header {
@@ -44,6 +44,13 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid #333;
+        }
+
+        .chat-logo {
+            height: 32px; /* Dopasowanie wysokości */
+            width: auto;
+            margin-right: 12px; /* Odstęp od tekstu */
+            border-radius: 4px; /* Opcjonalne lekkie zaokrąglenie */
         }
 
         .chat-header h3 {
@@ -145,6 +152,7 @@
 
 <div class="chat-container">
     <div class="chat-header">
+        <img src="/static/logo.jpg" alt="Hotable Logo" class="chat-logo">
         <h3>Hotable AI <span class="status-dot"></span></h3>
     </div>
     <div class="chat-box" id="chat-box">
@@ -172,7 +180,7 @@
         // ...
 
         try {
-            let response = await fetch("[http://127.0.0.1:5000/chat](http://127.0.0.1:5000/chat)", {
+            let response = await fetch("http://127.0.0.1:5000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: message })
@@ -180,7 +188,7 @@
             let data = await response.json();
             
             // Obsługa formatowania nowej linii
-            let formattedResponse = data.response.replace(/
+            let formattedResponse = data.response.replace(/\
 /g, '<br>');
             addMessage(formattedResponse, "bot-message");
         } catch (error) {
