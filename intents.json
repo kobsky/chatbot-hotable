@@ -21,12 +21,12 @@
     },
     {
       "tag": "restaurant_info",
-      "patterns": ["Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Jaki klimat ma Zielnik?", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik"],
+      "patterns": ["Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik"],
       "responses": [""]
     },
     {
       "tag": "check_contact",
-      "patterns": ["Jaki jest numer do Neonu?", "Podaj adres Zielnika", "Gdzie jest Porto Azzurro?", "Kontakt do restauracji", "Jak dojadę?", "Numer telefonu", "Gdzie to jest?", "Jaki ma adres?", "Podaj mi adres", "Jaki jest adres?", "Gdzie to jest dokładnie?", "Jaki tam jest numer?", "Numer telefonu poproszę"]
+      "patterns": ["Jaki jest numer do Neonu?", "Podaj adres Zielnika", "Gdzie jest Porto Azzurro?", "Kontakt do restauracji", "Jak dojadę?", "Numer telefonu", "Gdzie to jest?", "Jaki ma adres?", "Podaj mi adres", "Jaki jest adres?", "Gdzie to jest dokładnie?", "Jaki tam jest numer?", "Numer telefonu poproszę", "Podaj adres", "Gdzie to jest?", "Jaki jest numer?", "Adres poproszę"]
     },
     {
       "tag": "check_capacity",

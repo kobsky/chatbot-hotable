@@ -43,12 +43,21 @@ def chat():
 
     # 2. Logika Biznesowa (Router intencji)
     if intent == "restaurant_info":
+        # Próba pobrania z kontekstu, jeśli nie ma w wiadomości
+        if not restaurant_name and CONTEXT.get("last_restaurant"):
+            restaurant_name = CONTEXT["last_restaurant"]
+        
         if restaurant_name:
-            # Pobierz opis, jeśli brak klucza to daj default
-            description = RESTAURANT_DESCRIPTIONS.get(restaurant_name, f"Brak opisu dla {restaurant_name}.")
-            return jsonify({"response": description})
+            # Aktualizuj kontekst na wszelki wypadek
+            CONTEXT["last_restaurant"] = restaurant_name 
+            
+            description = RESTAURANT_DESCRIPTIONS.get(restaurant_name)
+            if description:
+                return jsonify({"response": description})
+            else:
+                return jsonify({"response": f"Brak opisu dla {restaurant_name}."})
         else:
-            return jsonify({"response": "O której restauracji chcesz posłuchać? Mamy Neon, Zielnik i Porto Azzurro."})
+             return jsonify({"response": "O której restauracji chcesz posłuchać? Mamy Neon, Zielnik i Porto Azzurro."})
     
     if intent == "check_contact":
         if restaurant_name:
@@ -78,6 +87,8 @@ def chat():
             # Pytamy bazę danych (L11 Integration)
             restaurants = db.get_restaurants_by_cuisine(cuisine)
             if restaurants:
+                # FIX: Zapamiętaj znalezioną restaurację w kontekście!
+                CONTEXT["last_restaurant"] = restaurants[0]['name']
                 response_text = f"Mam kilka propozycji w kategorii {cuisine}:<br>"
                 for r in restaurants:
                     # Dodajemy info o stolikach

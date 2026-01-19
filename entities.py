@@ -9,6 +9,7 @@ KW_CUISINE = {
     "polską": "Polska",
     "polskiej": "Polska",
     "polski": "Polska",
+    "polskiego": "Polska",
     "a polska": "Polska",
 
     # StreetFood (Neon)
