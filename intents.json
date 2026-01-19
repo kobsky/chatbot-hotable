@@ -2,78 +2,28 @@
   "intents": [
     {
       "tag": "greet",
-      "patterns": [
-        "Cześć",
-        "Hej",
-        "Dzień dobry",
-        "Siema",
-        "Dobry wieczór",
-        "Witam",
-        "Start"
-      ],
-      "responses": [
-        "Cześć! 👋 Chcesz sprawdzić dostępność miejsc?",
-        "Hej! Głodny? Powiedz, jakiej kuchni szukasz, albo zapytaj o konkretny lokal.",
-        "Dzień dobry! 🍕 W czym mogę pomóc? Szukasz stolika czy inspiracji?"
-      ]
+      "patterns": ["Cześć", "Dzień dobry", "Hej", "Start", "Witam", "Elo"],
+      "responses": ["Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?", "Cześć! Szukasz stolika czy konkretnej kuchni?"]
     },
     {
       "tag": "search_cuisine",
-      "patterns": [
-        "Szukam kuchni włoskiej",
-        "Zjadłbym pizzę",
-        "Gdzie zjem dobrego burgera?",
-        "Masz coś wegańskiego?",
-        "Chcę zjeść kuchnię polską",
-        "Znajdź mi restaurację streetfood",
-        "Co polecasz na obiad?",
-        "Szukam czegoś taniego",
-        "Gdzie na sushi?",
-        "Pokaż mi włoskie restauracje"
-      ],
-      "responses": [
-        "Jasne, sprawdzam co mamy w kategorii {cuisine}...",
-        "Już szukam najlepszych opcji w kategorii {cuisine}. Chwila moment!"
-      ]
+      "patterns": ["Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?"],
+      "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
     {
       "tag": "check_seats",
-      "patterns": [
-        "Czy są wolne miejsca w Zielniku?",
-        "Ile stolików ma Neon?",
-        "Sprawdź dostępność w Porto Azzurro",
-        "Czy w Zielniku jest tłok?",
-        "Znajdź wolny stolik w Neonie",
-        "Czy wejdę teraz do Zielnika?",
-        "Miejsca w Porto"
-      ],
-      "responses": [
-        "Już sprawdzam dostępność stolików w lokalu {restaurant}...",
-        "Łączę się z bazą, żeby sprawdzić miejsca w {restaurant}..."
-      ]
+      "patterns": ["Czy restauracja ma wolny stolik?", "Ile jest wolnych stolików?", "Są miejsca?", "Czy w Zielniku jest wolny stolik?", "Sprawdź dostępność w Urban Kitchen"],
+      "responses": ["Sprawdzam dostępność...", "Już weryfikuję liczbę wolnych stolików."]
     },
     {
       "tag": "check_hours",
-      "patterns": [
-        "O której zamykają Zielnik?",
-        "Czy Neon jest jeszcze otwarty?",
-        "Godziny otwarcia Porto Azzurro",
-        "Kiedy otwierają Zielnik?",
-        "Do której czynne ma Neon?",
-        "Czy Porto Azzurro jest otwarte w niedzielę?"
-      ],
-      "responses": [
-        "Sprawdzam godziny otwarcia dla {restaurant}...",
-        "Już weryfikuję, jak dzisiaj działa {restaurant}."
-      ]
+      "patterns": ["O której restauracja się zamyka?", "Czy otwarte w niedzielę?", "Godziny otwarcia", "Do której czynne?", "Kiedy otwieracie?"],
+      "responses": ["Większość naszych lokali jest otwarta od 12:00 do 22:00.", "Godziny otwarcia zależą od konkretnego lokalu."]
     },
     {
       "tag": "fallback",
       "patterns": [],
-      "responses": [
-        "Sorki, nie do końca zrozumiałem. 🧐 Możesz zapytać o konkretną kuchnię (np. włoską) albo dostępność w lokalu.",
-        "Jeszcze się uczę i tego nie złapałem. Szukasz restauracji czy wolnego stolika?"
-      ]
+      "responses": ["Przykro mi nie mogę Ci jeszcze w tym pomóc, jestem w fazie prototypu."]
     }
   ]
 }
