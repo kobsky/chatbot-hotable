@@ -52,3 +52,23 @@ RESTAURANT_DESCRIPTIONS = {
     "Porto Azzurro": "Porto Azzurro to kulinarna podróż do słonecznej Italii i Grecji, z nutą hiszpańskich smaków. W naszej karcie znajdziesz esencję kuchni śródziemnomorskiej: świeże owoce morza, ręcznie robione pasty, chrupiące pizze z pieca opalanego drewnem, soczyste mięsa z grilla i mnóstwo świeżych warzyw, ziół oraz najlepszej oliwy z oliwek.",
     "Zielnik": "Zielnik to restauracja, w której tradycja spotyka się z nowoczesnością. Nasze menu opiera się wyłącznie na świeżych, sezonowych produktach od lokalnych dostawców. Szef kuchni czerpie inspiracje z bogactwa polskich pól i lasów, tworząc dania, które zaskakują smakiem i formą."
 }
+RESTAURANT_DETAILS = {
+    "Neon": {
+        "phone": "+48 890 211 403",
+        "address": "ul. Obłońska 4",
+        "hours": "09:00 - 23:00",
+        "max_tables": 10
+    },
+    "Porto Azzurro": {
+        "phone": "+48 912 901 733",
+        "address": "ul. Podwale 7A",
+        "hours": "09:00 - 21:00",
+        "max_tables": 15
+    },
+    "Zielnik": {
+        "phone": "+48 730 100 200",
+        "address": "ul. Wiosenna 14",
+        "hours": "09:00 - 21:00",
+        "max_tables": 6
+    }
+}
