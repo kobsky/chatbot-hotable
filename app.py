@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS # Pozwala na komunikację z przeglądarką
 from nlp_engine import ChatbotBrain
 from db_handler import DatabaseHandler
-from entities import RESTAURANT_DESCRIPTIONS
+from entities import RESTAURANT_DESCRIPTIONS, RESTAURANT_DETAILS
 
 app = Flask(__name__)
 CORS(app) # Odblokowuje dostęp dla widgetu HTML
@@ -12,6 +12,8 @@ print("⏳ Uruchamianie systemu...")
 bot = ChatbotBrain()
 db = DatabaseHandler()
 print("🚀 System gotowy! Serwer działa.")
+
+CONTEXT = {"last_restaurant": None}  # Globalna pamięć (uproszczona dla MVP)
 
 @app.route('/')
 def index():
@@ -30,15 +32,44 @@ def chat():
 
     response_text = ""
 
+    # 1. Próba pobrania restauracji z bieżącej wiadomości
+    restaurant_name = entities.get("restaurant")
+    
+    # 2. Zarządzanie Kontekstem
+    if restaurant_name:
+        CONTEXT["last_restaurant"] = restaurant_name  # Aktualizuj pamięć
+    else:
+        restaurant_name = CONTEXT["last_restaurant"]  # Użyj pamięci
+
     # 2. Logika Biznesowa (Router intencji)
     if intent == "restaurant_info":
-        restaurant_name = entities.get("restaurant")
         if restaurant_name:
             # Pobierz opis, jeśli brak klucza to daj default
             description = RESTAURANT_DESCRIPTIONS.get(restaurant_name, f"Brak opisu dla {restaurant_name}.")
             return jsonify({"response": description})
         else:
             return jsonify({"response": "O której restauracji chcesz posłuchać? Mamy Neon, Zielnik i Porto Azzurro."})
+    
+    if intent == "check_contact":
+        if restaurant_name:
+            details = RESTAURANT_DETAILS.get(restaurant_name)
+            if details:
+                return jsonify({"response": f"📍 Adres: {details['address']}\n📞 Telefon: {details['phone']}"})
+        return jsonify({"response": "Podaj nazwę restauracji, a podam Ci jej adres i numer telefonu."})
+
+    if intent == "check_hours":
+        if restaurant_name:
+             details = RESTAURANT_DETAILS.get(restaurant_name)
+             if details:
+                return jsonify({"response": f"🕒 {restaurant_name} jest otwarte: {details['hours']}"})
+        return jsonify({"response": "Większość lokali działa od 9:00 do 21:00. O który konkretnie pytasz?"})
+
+    if intent == "check_capacity":
+        if restaurant_name:
+             details = RESTAURANT_DETAILS.get(restaurant_name)
+             if details:
+                return jsonify({"response": f"🏠 {restaurant_name} posiada łącznie {details['max_tables']} stolików."})
+        return jsonify({"response": "Każdy lokal ma inną wielkość. O który pytasz?"})
     
     # --- SCENARIUSZ 1: Szukanie po kuchni ---
     if intent == 'search_cuisine':
@@ -61,7 +92,6 @@ def chat():
 
     # --- SCENARIUSZ 2: Sprawdzanie dostępności ---
     elif intent == 'check_seats':
-        restaurant_name = entities.get('restaurant')
         if restaurant_name:
             result = db.check_availability(restaurant_name)
             if result:
@@ -74,15 +104,6 @@ def chat():
                 response_text = f"Nie mogę znaleźć restauracji '{restaurant_name}' w bazie. Upewnij się, że wpisałeś poprawną nazwę."
         else:
             response_text = "Mogę sprawdzić dostępność, ale musisz podać nazwę restauracji (np. Zielnik, Neon)."
-
-    # --- SCENARIUSZ 3: Godziny otwarcia ---
-    elif intent == 'check_hours':
-        # W MVP upraszczamy - odsyłamy ogólną informację, bo obsługa godzin w bazie jest skomplikowana
-        restaurant_name = entities.get('restaurant')
-        if restaurant_name:
-             response_text = f"Restauracja <b>{restaurant_name}</b> jest zazwyczaj otwarta do późna. Dokładne godziny znajdziesz na ich profilu w aplikacji!"
-        else:
-             response_text = "O którą restaurację pytasz?"
 
     # --- RESZTA (Powitanie / Fallback) ---
     else:

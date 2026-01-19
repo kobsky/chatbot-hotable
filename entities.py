@@ -6,7 +6,9 @@ KW_CUISINE = {
     "domowe": "Polska",
     "schabowy": "Polska",
     "pierogi": "Polska",
-    
+    "polską": "Polska",
+    "polskiej": "Polska",
+    "polski": "Polska",
 
     # StreetFood (Neon)
     "streetfood": "StreetFood",
@@ -15,6 +17,8 @@ KW_CUISINE = {
     "fast food": "StreetFood",
     "frytki": "StreetFood",
     "amerykańska": "StreetFood",
+    "burgera": "StreetFood",
+    "street food": "StreetFood",
 
     # Śródziemnomorska (Porto Azzurro)
     "śródziemnomorska": "Śródziemnomorska",
@@ -25,7 +29,10 @@ KW_CUISINE = {
     "wloska": "Śródziemnomorska",
     "pizza": "Śródziemnomorska",
     "spaghetti": "Śródziemnomorska",
-    "italii": "Śródziemnomorska"
+    "italii": "Śródziemnomorska",
+    "włoską": "Śródziemnomorska",
+    "włoskiej": "Śródziemnomorska",
+    "wloskiej": "Śródziemnomorska"
 }
 
 
