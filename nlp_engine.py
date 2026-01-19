@@ -1,5 +1,6 @@
 import json
 import random
+import numpy as np
 # Biblioteki do Machine Learningu (Realizacja L9 i L12)
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -36,8 +37,6 @@ class ChatbotBrain:
                 training_labels.append(intent['tag'])
 
         # TWORZENIE POTOKU (PIPELINE) - Realizacja L9
-        # 1. CountVectorizer: Zamienia słowa na liczby (Bag-of-Words)
-        # 2. MultinomialNB: Klasyfikator Naiwnego Bayesa (Szybki i skuteczny dla tekstu)
         self.model = make_pipeline(CountVectorizer(), MultinomialNB())
         
         # Trenowanie modelu
@@ -46,14 +45,23 @@ class ChatbotBrain:
 
     def predict_intent(self, text):
         """
-        Przewiduje intencję użytkownika na podstawie tekstu.
+        Przewiduje intencję użytkownika na podstawie tekstu, z progiem pewności.
         """
         if not self.model:
             return "fallback"
-            
-        # Predykcja (zwraca np. ['check_hours'])
-        predicted_tag = self.model.predict([text])[0]
-        return predicted_tag
+
+        # Używamy predict_proba zamiast predict
+        probabilities = self.model.predict_proba([text])[0]
+        max_proba = np.max(probabilities)
+        best_intent_index = np.argmax(probabilities)
+        
+        # Debug print (pomocny przy testach)
+        print(f"DEBUG: Text='{text}', Max Proba={max_proba:.2f}, Intent={self.model.classes_[best_intent_index]}")
+
+        if max_proba < 0.6:
+            return "fallback"
+        else:
+            return self.model.classes_[best_intent_index]
 
     def extract_entities(self, text):
         """
@@ -95,10 +103,12 @@ if __name__ == "__main__":
         "Cześć, jestem głodny",
         "Szukam kuchni włoskiej",
         "Czy są miejsca w Zielniku?",
-        "O której zamykają Neon?"
+        "O której zamykają Neon?",
+        "jaka jest pogoda?"
     ]
     
     for text in test_phrases:
         intent = bot.predict_intent(text)
         entities = bot.extract_entities(text)
-        print(f"Tekst: '{text}' -> Intencja: {intent} | Encje: {entities}")
+        response = bot.get_response(intent)
+        print(f"Tekst: '{text}' -> Intencja: {intent} | Encje: {entities} | Odpowiedź: {response}")
