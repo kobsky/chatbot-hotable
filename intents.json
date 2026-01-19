@@ -59,6 +59,19 @@
         "responses": ["Niestety nie mamy tej kuchni w bazie. Aktualnie dostępne kuchnie to: Polska, StreetFood i Włoska. Mogę zaproponować restaurację z którejś z tych kuchni?"]
     },
     {
+      "tag": "list_restaurants",
+      "patterns": [
+        "Jakie są dostępne restauracje?",
+        "Wymień lokale",
+        "Co macie w ofercie?",
+        "Pokaż listę restauracji",
+        "Jakie macie knajpy?",
+        "Gdzie mogę zjeść?",
+        "Lista lokali"
+      ],
+      "responses": []
+    },
+    {
       "tag": "fallback",
       "patterns": [],
       "responses": ["Przykro mi nie mogę Ci jeszcze w tym pomóc, jestem w fazie prototypu."]

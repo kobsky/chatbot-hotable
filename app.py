@@ -42,6 +42,16 @@ def chat():
         restaurant_name = CONTEXT["last_restaurant"]  # Użyj pamięci
 
     # 2. Logika Biznesowa (Router intencji)
+    if intent == "list_restaurants":
+        response_text = (
+            "Aktualnie współpracujemy z 3 wyjątkowymi lokalami:\n"
+            "1. 🍔 **Neon** (StreetFood & Bary)"
+            "2. 🍝 **Porto Azzurro** (Śródziemnomorska)"
+            "3. 🥗 **Zielnik** (Polska & Nowoczesna)"
+            "O którym z nich chcesz dowiedzieć się więcej?"
+        )
+        return jsonify({"response": response_text})
+        
     if intent == "restaurant_info":
         # Próba pobrania z kontekstu, jeśli nie ma w wiadomości
         if not restaurant_name and CONTEXT.get("last_restaurant"):
