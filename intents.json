@@ -21,6 +21,11 @@
       "responses": ["Większość naszych lokali jest otwarta od 12:00 do 22:00.", "Godziny otwarcia zależą od konkretnego lokalu."]
     },
     {
+      "tag": "restaurant_info",
+      "patterns": ["Neon", "A w Neon?", "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Jaki klimat ma Zielnik?", "Zielnik", "Porto Azzurro", "Opis restauracji Neon", "A Zielnik?"],
+      "responses": [""]
+    },
+    {
       "tag": "fallback",
       "patterns": [],
       "responses": ["Przykro mi nie mogę Ci jeszcze w tym pomóc, jestem w fazie prototypu."]
