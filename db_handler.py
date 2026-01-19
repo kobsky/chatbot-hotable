@@ -28,18 +28,16 @@ class DatabaseHandler:
         if not self.supabase: return []
         
         try:
-            # POPRAWKA: Używamy .contains zamiast .ilike
-            # Ponieważ w bazie cuisine_type to tablica (np. ["Polska"]),
-            # musimy szukać czy ta tablica zawiera nasz element.
-            # Ważne: cuisine_name musi być dokładne (wielkość liter),
-            # ale o to dba nasz plik entities.py (zamienia "polska" na "Polska").
-            
             response = self.supabase.table('restaurants') \
                 .select("name, description, price_range, available_tables, cuisine_type") \
                 .contains('cuisine_type', [cuisine_name]) \
                 .execute()
             
-            return response.data
+            results = response.data
+            # Filtr wykluczający nieaktywną restaurację "Trawnik"
+            results = [r for r in results if r['name'] != 'Trawnik']
+            
+            return results
         except Exception as e:
             print(f"Błąd DB (kuchnia): {e}")
             return []

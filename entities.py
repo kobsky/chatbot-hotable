@@ -20,7 +20,12 @@ KW_CUISINE = {
     "śródziemnomorska": "Śródziemnomorska",
     "grecka": "Śródziemnomorska",
     "ryby": "Śródziemnomorska",
-    "owoce morza": "Śródziemnomorska"
+    "owoce morza": "Śródziemnomorska",
+    "włoska": "Śródziemnomorska",
+    "wloska": "Śródziemnomorska",
+    "pizza": "Śródziemnomorska",
+    "spaghetti": "Śródziemnomorska",
+    "italii": "Śródziemnomorska"
 }
 
 
