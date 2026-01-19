@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS # Pozwala na komunikację z przeglądarką
 from nlp_engine import ChatbotBrain
 from db_handler import DatabaseHandler
+from entities import RESTAURANT_DESCRIPTIONS
 
 app = Flask(__name__)
 CORS(app) # Odblokowuje dostęp dla widgetu HTML
@@ -11,6 +12,10 @@ print("⏳ Uruchamianie systemu...")
 bot = ChatbotBrain()
 db = DatabaseHandler()
 print("🚀 System gotowy! Serwer działa.")
+
+@app.route('/')
+def index():
+    return send_from_directory('.', 'test_widget.html')
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -26,6 +31,14 @@ def chat():
     response_text = ""
 
     # 2. Logika Biznesowa (Router intencji)
+    if intent == "restaurant_info":
+        restaurant_name = entities.get("restaurant")
+        if restaurant_name:
+            # Pobierz opis, jeśli brak klucza to daj default
+            description = RESTAURANT_DESCRIPTIONS.get(restaurant_name, f"Brak opisu dla {restaurant_name}.")
+            return jsonify({"response": description})
+        else:
+            return jsonify({"response": "O której restauracji chcesz posłuchać? Mamy Neon, Zielnik i Porto Azzurro."})
     
     # --- SCENARIUSZ 1: Szukanie po kuchni ---
     if intent == 'search_cuisine':
