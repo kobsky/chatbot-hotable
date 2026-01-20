@@ -9,6 +9,11 @@
       "responses": ["Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?", "Cześć! Szukasz stolika czy konkretnej kuchni?"]
     },
     {
+      "tag": "bot_purpose",
+      "patterns": ["Od czego jesteś?", "Co potrafisz?", "Kim jesteś?", "W czym pomagasz?", "Co tu mogę zrobić?", "Do czego służysz?"],
+      "responses": ["Jestem Twoim kulinarnym asystentem. Pomogę Ci znaleźć idealną restaurację, sprawdzę dostępność stolików w czasie rzeczywistym i podpowiem, gdzie zjeść."]
+    },
+    {
         "tag": "book_table",
         "patterns": ["Zarezerwuj stolik", "Chcę rezerwację", "Bukuj", "Rezerwacja", "Zarezerwuj mi", "Chcę zamówić stolik", "Umów mnie"],
         "responses": ["Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym. Aby dokonać rezerwacji, skontaktuj się bezpośrednio z lokalem lub użyj przycisku na stronie."]
@@ -36,7 +41,14 @@
           "Ile wolnych stolików ma Zielnik?",
           "Stan miejsc w Neonie",
           "Sprawdź dostępność",
-          "Czy są wolne miejsca?"
+          "Czy są wolne miejsca?",
+          "W jakich restauracjach znajdę wolne stoliki?", 
+          "Gdzie są miejsca?", 
+          "Ile jest miejsc w Neonie?", 
+          "Stan stolików", 
+          "Sprawdź dostępność Neon", 
+          "Gdzie zjem od ręki?", 
+          "Jakie rodzaje kuchni macie?"
       ],
       "responses": []
     },

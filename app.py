@@ -36,6 +36,10 @@ def chat():
         response_text = bot.get_response(intent)
         return jsonify({"response": response_text})
 
+    if intent == "bot_purpose":
+        response_text = bot.get_response(intent)
+        return jsonify({"response": response_text})
+
     if intent == 'search_cuisine':
         CONTEXT["last_restaurant"] = None
         cuisine = entities.get('cuisine')
@@ -51,7 +55,14 @@ def chat():
             else:
                 response_text = f"Przykro mi, ale nie znalazłem restauracji typu {cuisine} w naszej bazie. 😔"
         else:
-            response_text = "Jasne, chętnie coś polecę. Ale na jaką kuchnię masz ochotę? (np. Polska, Włoska, StreetFood)"
+            # FIX: If user asks "what do you recommend" without specifying cuisine, list all restaurants
+            response_text = (
+                "Aktualnie dostępne restauracje to:\n"
+                "1. 🍔 **Neon** (StreetFood)\n"
+                "2. 🍝 **Porto Azzurro** (Śródziemnomorska)\n"
+                "3. 🥗 **Zielnik** (Polska)\n\n"
+                "Napisz nazwę wybranego lokalu, aby sprawdzić szczegóły."
+            )
         return jsonify({"response": response_text})
 
     if intent == "restaurant_info":
@@ -96,7 +107,14 @@ def chat():
             else:
                 return jsonify({"response": f"Nie znalazłem danych dla restauracji {restaurant_name}."})
         else:
-             return jsonify({"response": "W której restauracji sprawdzić liczbę wolnych miejsc? (Neon, Zielnik, Porto Azzurro)"})
+            # FIX: Global check for all restaurants
+            all_restaurants = db.get_all_restaurants()
+            response_text = "Oto sytuacja w naszych lokalach:\n"
+            for r in all_restaurants:
+                seats = r['available_tables']
+                icon = "🟢" if seats > 0 else "🔴"
+                response_text += f"{icon} {r['name']}: {seats} wolne\n"
+            return jsonify({"response": response_text})
 
     if intent == "check_contact":
         if restaurant_name:
