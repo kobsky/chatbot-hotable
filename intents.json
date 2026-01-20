@@ -2,7 +2,7 @@
   "intents": [
     {
       "tag": "greet",
-      "patterns": ["Cześć", "Dzień dobry", "Hej", "Start", "Witam", "Elo"],
+      "patterns": ["Cześć", "Czesc", "Dzień dobry", "Hej", "Witam", "Start", "Dobry wieczór", "Siema", "Elo", "Hi", "Hello"],
       "responses": ["Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?", "Cześć! Szukasz stolika czy konkretnej kuchni?"]
     },
     {
@@ -15,7 +15,18 @@
         "kuchnia uliczna",
         "zjadłbym burgera",
         "coś szybkiego",
-        "szukam streetfoodu"
+        "szukam streetfoodu",
+        "Pomóż mi wybrać kuchnię",
+        "Nie wiem co zjeść",
+        "Doradź mi coś",
+        "Jestem głodny",
+        "Co polecasz?",
+        "Szukam obiadu",
+        "Chcę coś zjeść",
+        "Inna",
+        "Pokaż inne",
+        "Coś innego",
+        "Wybierz za mnie"
       ],
       "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
@@ -38,13 +49,17 @@
     {
       "tag": "restaurant_info",
       "patterns": [
-        "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Szczegóły", "Opis", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik",
+        "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik",
         "restauracja Neon?",
         "Neon",
         "co wies o neonie?",
         "opisz neon",
         "a neon?",
-        "knajpa neon"
+        "knajpa neon",
+        "Opowiedz o niej", 
+        "Opisz to miejsce", 
+        "Co wiesz o Zielniku?", 
+        "Szczegóły lokalu"
       ],
       "responses": [""]
     },
