@@ -29,6 +29,10 @@ def chat():
     
     print(f"📩 Msg: '{user_message}' | Intent: {intent} | Entities: {entities}")
 
+    # --- FIX: GUARD CLAUSE (Natychmiastowe przerwanie, jeśli nie zrozumiano) ---
+    if intent == "fallback":
+        return jsonify({"response": "Przepraszam, nie zrozumiałem. 🤔\nCzy możesz zapytać inaczej? Spróbuj np.:\n- 'Szukam włoskiej'\n- 'Gdzie są wolne miejsca?'\n- 'Pokaż listę lokali'"})
+
     response_text = ""
     restaurant_name = entities.get("restaurant")
 
