@@ -31,20 +31,18 @@ def chat():
     response_text = ""
     restaurant_name = entities.get("restaurant")
 
-    # FIX 1: Reset kontekstu na powitanie
     if intent == "greet":
         CONTEXT["last_restaurant"] = None
         response_text = bot.get_response(intent)
         return jsonify({"response": response_text})
 
-    # FIX 2: Reset kontekstu przy nowym wyszukiwaniu
     if intent == 'search_cuisine':
-        CONTEXT["last_restaurant"] = None  # Resetuj kontekst restauracji
+        CONTEXT["last_restaurant"] = None
         cuisine = entities.get('cuisine')
         if cuisine:
             restaurants = db.get_restaurants_by_cuisine(cuisine)
             if restaurants:
-                CONTEXT["last_restaurant"] = restaurants[0]['name'] # Zapisz nową restaurację
+                CONTEXT["last_restaurant"] = restaurants[0]['name']
                 response_text = f"Mam kilka propozycji w kategorii {cuisine}:<br>"
                 for r in restaurants:
                     seats = r['available_tables']
@@ -56,21 +54,18 @@ def chat():
             response_text = "Jasne, chętnie coś polecę. Ale na jaką kuchnię masz ochotę? (np. Polska, Włoska, StreetFood)"
         return jsonify({"response": response_text})
 
-    # FIX 3: Inteligentniejsza obsługa kontekstu dla informacji o restauracji
     if intent == "restaurant_info":
-        used_context = False
-        if not restaurant_name:
-            restaurant_name = CONTEXT.get("last_restaurant")
-            used_context = True if restaurant_name else False
-        
+        response_prefix = ""
+        if not restaurant_name and CONTEXT.get("last_restaurant"):
+            if intent != "book_table": # Warunek bezpieczeństwa
+                restaurant_name = CONTEXT["last_restaurant"]
+                response_prefix = f"(Nawiązując do {restaurant_name}): "
+
         if restaurant_name:
             CONTEXT["last_restaurant"] = restaurant_name
             description = RESTAURANT_DESCRIPTIONS.get(restaurant_name)
             if description:
-                if used_context:
-                    return jsonify({"response": f"(Nawiązując do {restaurant_name}): {description}"})
-                else:
-                    return jsonify({"response": description})
+                return jsonify({"response": response_prefix + description})
             else:
                 return jsonify({"response": f"Brak opisu dla {restaurant_name}."})
         else:
@@ -86,7 +81,6 @@ def chat():
         )
         return jsonify({"response": response_text})
 
-    # Pozostałe intencje korzystają z kontekstu w bezpieczny sposób
     if not restaurant_name:
         restaurant_name = CONTEXT.get("last_restaurant")
 
@@ -126,7 +120,6 @@ def chat():
                 return jsonify({"response": f"🏠 {restaurant_name} posiada łącznie {details['max_tables']} stolików."})
         return jsonify({"response": "Każdy lokal ma inną wielkość. O który pytasz?"})
     
-    # Domyślna odpowiedź
     response_text = bot.get_response(intent)
     return jsonify({"response": response_text})
 

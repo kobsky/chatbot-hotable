@@ -2,12 +2,21 @@
   "intents": [
     {
       "tag": "greet",
-      "patterns": ["Cześć", "Czesc", "Dzień dobry", "Hej", "Witam", "Start", "Dobry wieczór", "Siema", "Elo", "Hi", "Hello"],
+      "patterns": [
+        "Cześć", "cześć", "Czesc", "Dzień dobry", "Hej", "Witam", "Start",
+        "Dobry wieczór", "Siema", "Elo", "Hi", "Hello", "Rozpocznij", "Hejka"
+      ],
       "responses": ["Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?", "Cześć! Szukasz stolika czy konkretnej kuchni?"]
+    },
+    {
+        "tag": "book_table",
+        "patterns": ["Zarezerwuj stolik", "Chcę rezerwację", "Bukuj", "Rezerwacja", "Zarezerwuj mi", "Chcę zamówić stolik", "Umów mnie"],
+        "responses": ["Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym. Aby dokonać rezerwacji, skontaktuj się bezpośrednio z lokalem lub użyj przycisku na stronie."]
     },
     {
       "tag": "search_cuisine",
       "patterns": [
+        "Pomóż mi wybrać", "Co polecasz?", "Jestem głodny", "Nie wiem co zjeść", "Szukam restauracji", "Gdzie zjem?",
         "Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza",
         "a z kuchni streetfood",
         "streetfood",
@@ -15,18 +24,7 @@
         "kuchnia uliczna",
         "zjadłbym burgera",
         "coś szybkiego",
-        "szukam streetfoodu",
-        "Pomóż mi wybrać kuchnię",
-        "Nie wiem co zjeść",
-        "Doradź mi coś",
-        "Jestem głodny",
-        "Co polecasz?",
-        "Szukam obiadu",
-        "Chcę coś zjeść",
-        "Inna",
-        "Pokaż inne",
-        "Coś innego",
-        "Wybierz za mnie"
+        "szukam streetfoodu"
       ],
       "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
     },
@@ -55,11 +53,7 @@
         "co wies o neonie?",
         "opisz neon",
         "a neon?",
-        "knajpa neon",
-        "Opowiedz o niej", 
-        "Opisz to miejsce", 
-        "Co wiesz o Zielniku?", 
-        "Szczegóły lokalu"
+        "knajpa neon"
       ],
       "responses": [""]
     },
