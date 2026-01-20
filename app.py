@@ -13,6 +13,7 @@ db = DatabaseHandler()
 print("🚀 System gotowy! Serwer działa.")
 
 CONTEXT = {"last_restaurant": None}
+ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
 
 @app.route('/')
 def index():
@@ -55,13 +56,8 @@ def chat():
             else:
                 response_text = f"Przykro mi, ale nie znalazłem restauracji typu {cuisine} w naszej bazie. 😔"
         else:
-            response_text = (
-                "Aktualnie dostępne restauracje to:\n"
-                "1. 🍔 **Neon** (StreetFood)\n"
-                "2. 🍝 **Porto Azzurro** (Śródziemnomorska)\n"
-                "3. 🥗 **Zielnik** (Polska)\n\n"
-                "Napisz nazwę wybranego lokalu, aby sprawdzić szczegóły."
-            )
+             # Jeśli brak encji 'cuisine', pytamy o preferencje
+            response_text = "Zależy, na co masz ochotę! 😋 Celujesz w kuchnię Polską 🥟, Włoską 🍝 czy może soczysty StreetFood 🍔?"
         return jsonify({"response": response_text})
 
     if intent == "restaurant_info":
@@ -92,6 +88,14 @@ def chat():
             "Napisz nazwę wybranego lokalu, aby sprawdzić szczegóły."
         )
         return jsonify({"response": response_text})
+    
+    if intent == "ask_recommendation":
+        # Logika dla: "Co polecasz?"
+        return jsonify({"response": "Zależy, na co masz ochotę! 😋 Celujesz w kuchnię Polską 🥟, Włoską 🍝 czy może soczysty StreetFood 🍔?"})
+
+    if intent == "list_cuisines":
+        # Logika dla: "Jakie rodzaje kuchni?"
+        return jsonify({"response": "Mamy szeroki wybór smaków! Oferujemy kuchnię:\n🇵🇱 **Polską** (Zielnik)\n🇮🇹 **Włoską/Śródziemnomorską** (Porto Azzurro)\n🍔 **StreetFood** (Neon)\n\nNa co się skusisz?"})
 
     if not restaurant_name:
         restaurant_name = CONTEXT.get("last_restaurant")
@@ -118,6 +122,8 @@ def chat():
 
             response_lines = ["Oto stan dostępności w naszych lokalach:<br>"]
             for r in all_rest:
+                if r['name'] not in ACTIVE_VENUES:
+                    continue
                 seats = r.get('available_tables', 0)
                 icon = "🟢" if seats > 0 else "🔴"
                 response_lines.append(f"{icon} <b>{r.get('name')}</b>: {seats} wolnych")

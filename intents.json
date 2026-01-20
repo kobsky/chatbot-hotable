@@ -21,7 +21,7 @@
     {
       "tag": "search_cuisine",
       "patterns": [
-        "Pomóż mi wybrać", "Co polecasz?", "Jestem głodny", "Nie wiem co zjeść", "Szukam restauracji", "Gdzie zjem?",
+        "Jestem głodny", "Szukam restauracji", "Gdzie zjem?",
         "Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza",
         "a z kuchni streetfood",
         "streetfood",
@@ -47,10 +47,9 @@
           "Ile jest miejsc w Neonie?", 
           "Stan stolików", 
           "Sprawdź dostępność Neon", 
-          "Gdzie zjem od ręki?", 
-          "Jakie rodzaje kuchni macie?"
+          "Gdzie zjem od ręki?"
       ],
-      "responses": []
+      "responses": ["Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."]
     },
     {
       "tag": "check_hours",
@@ -89,24 +88,24 @@
     {
       "tag": "list_restaurants",
       "patterns": [
-        "Jakie są dostępne restauracje?",
-        "Wymień lokale",
-        "Co macie w ofercie?",
-        "Lista lokali",
-        "Jakaś inna?",
-        "Inna",
-        "Pokaż inne",
-        "Coś innego",
-        "Macie coś innego?",
-        "Wymień wszystkie",
-        "Jakie jeszcze?"
+        "Pokaż listę restauracji", "Jakie macie lokale", "Wymień restauracje", "Jakaś inna?"
       ],
       "responses": []
     },
     {
       "tag": "fallback",
       "patterns": [],
-      "responses": ["Przykro mi nie mogę Ci jeszcze w tym pomóc, jestem w fazie prototypu."]
+      "responses": ["Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."]
+    },
+    {
+      "tag": "ask_recommendation",
+      "patterns": ["Którą polecasz?", "Co mi doradzisz?", "Co wybrać?", "Poleć coś", "Która najlepsza?", "Nie wiem co wybrać", "Pomóż mi wybrać", "Co polecasz?", "Nie wiem co zjeść"],
+      "responses": []
+    },
+    {
+      "tag": "list_cuisines",
+      "patterns": ["Jakie rodzaje kuchni macie?", "Jaka kuchnia?", "Co serwujecie?", "Wybór kuchni", "Kategorie jedzenia", "Jakie jedzenie"],
+      "responses": []
     }
   ]
 }
