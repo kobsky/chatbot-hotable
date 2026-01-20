@@ -292,10 +292,9 @@
 </div>
 
 <script>
-    // 1. Funkcja Resetu (Obsługuje guzik odświeżania)
+    // 1. Funkcja Resetu (Czyści chat)
     function resetChat() {
         let chatBox = document.getElementById("chat-box");
-        // Czyścimy chat i przywracamy powitanie
         chatBox.innerHTML = `
             <div class="message bot-message">
                 Cześć! Tu Hotable AI. 🍕<br>Pomogę Ci znaleźć stolik lub wybrać kuchnię. Wpisz np. "Szukam włoskiej" lub "Pokaż dostępne lokale".
@@ -303,13 +302,12 @@
         `;
     }
 
-    // 2. Funkcja Wysyłania (Naprawiona linia z replace)
+    // 2. Funkcja Wysyłania
     async function sendMessage() {
         let inputField = document.getElementById("user-input");
         let message = inputField.value.trim();
         if (message === "") return;
 
-        // Dodaj wiadomość użytkownika
         addMessage(message, "user-message");
         inputField.value = "";
 
@@ -321,9 +319,9 @@
             });
             let data = await response.json();
             
-            // --- POPRAWKA KRYTYCZNA ---
-            // Ta linia musi być w całości, nie może być przełamana!
-            let formattedResponse = data.response.replace(//g, '<br>');
+            // --- FIX: METODA SPLIT-JOIN (BEZ REGEXA) ---
+            // To jest bezpieczne i edytor tego nie zepsuje:
+            let formattedResponse = data.response.split('\n').join('<br>');
             
             addMessage(formattedResponse, "bot-message");
         } catch (error) {
