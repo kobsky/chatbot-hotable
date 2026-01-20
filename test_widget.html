@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotable Chatbot MVP</title>
+    <title>Hotable AI - Demo</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -24,18 +24,74 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
+        /* --- NOWY WRAPPER DLA DWÓCH KOLUMN --- */
+        .main-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 60px; /* Odstęp między opisem a czatem */
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* --- LEWY PANEL INFORMACYJNY --- */
+        .info-panel {
+            flex: 1;
+            padding: 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .info-panel h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #fff, #A1A1AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-panel p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-grey);
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        .feature-list li::before {
+            content: "🔥";
+            margin-right: 15px;
+            color: var(--primary-orange);
+        }
+
+        /* --- CHAT CONTAINER (PRAWA STRONA) --- */
         .chat-container {
             width: 400px;
             height: 600px;
             background-color: var(--card-bg);
             border-radius: 16px;
+            /* NEON GLOW */
             box-shadow: 0 0 20px var(--primary-orange), 0 0 60px rgba(242, 122, 26, 0.4);
             border: 1px solid var(--primary-orange);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            flex-shrink: 0; /* Zapobiega zmniejszaniu się okna czatu */
         }
 
         .chat-header {
@@ -43,21 +99,26 @@
             padding: 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Rozrzuca logo i reset na boki */
             border-bottom: 1px solid #333;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
         .chat-logo {
-            height: 32px; /* Dopasowanie wysokości */
+            height: 32px;
             width: auto;
-            margin-right: 12px; /* Odstęp od tekstu */
-            border-radius: 4px; /* Opcjonalne lekkie zaokrąglenie */
+            margin-right: 12px;
+            border-radius: 4px;
         }
 
         .chat-header h3 {
             margin: 0;
             font-size: 18px;
             font-weight: 600;
-            flex-grow: 1;
         }
 
         .status-dot {
@@ -66,8 +127,26 @@
             background-color: var(--green-status);
             border-radius: 50%;
             display: inline-block;
-            margin-left: 10px;
+            margin-left: 8px;
             box-shadow: 0 0 5px var(--green-status);
+        }
+
+        /* PRZYCISK RESET */
+        .refresh-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-grey);
+            transition: color 0.3s, transform 0.3s;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover {
+            color: var(--primary-orange);
+            transform: rotate(180deg);
         }
 
         .chat-box {
@@ -93,6 +172,11 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .bot-message {
@@ -132,7 +216,7 @@
             border-color: var(--primary-orange);
         }
 
-        button {
+        button.send-btn {
             padding: 12px 20px;
             background-color: var(--primary-orange);
             color: white;
@@ -143,30 +227,82 @@
             transition: background-color 0.2s;
         }
 
-        button:hover {
+        button.send-btn:hover {
             background-color: #d6630e;
+        }
+        
+        /* Responsywność dla mniejszych ekranów */
+        @media (max-width: 800px) {
+            .main-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .info-panel {
+                text-align: center;
+            }
+            .feature-list li {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">
-        <img src="/static/logo.jpg" alt="Hotable Logo" class="chat-logo">
-        <h3>Hotable AI <span class="status-dot"></span></h3>
+<div class="main-wrapper">
+    <div class="info-panel">
+        <h1>Twój Osobisty<br>Concierge Kulinarny</h1>
+        <p>
+            Hotable AI to inteligentny asystent, który sprawi, że wyjście na miasto stanie się przyjemnością, a nie wyzwaniem. 
+            Zapytaj o dostępne restauracje, odkryj nowe smaki i znajdź idealne miejsce na wieczór w kilka sekund.
+        </p>
+        <ul class="feature-list">
+            <li>Sprawdzanie dostępności stolików "na żywo"</li>
+            <li>Rekomendacje dopasowane do Twojego smaku</li>
+            <li>Błyskawiczne informacje o godzinach i adresach</li>
+            <li>Wsparcie dla najlepszych lokali w mieście</li>
+        </ul>
     </div>
-    <div class="chat-box" id="chat-box">
-        <div class="message bot-message">
-            Cześć! Tu Hotable AI. 🍕<br>Pomogę Ci znaleźć stolik lub wybrać kuchnię. Wpisz np. "Szukam włoskiej".
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <img src="/static/logo.jpg" alt="Hotable Logo" class="chat-logo">
+                <h3>Hotable AI <span class="status-dot"></span></h3>
+            </div>
+            <button class="refresh-btn" onclick="resetChat()" title="Rozpocznij od nowa">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+            </button>
         </div>
-    </div>
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="Napisz wiadomość..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">Wyślij</button>
+        
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                Cześć! Tu Hotable AI. 🍕<br>Pomogę Ci znaleźć stolik lub wybrać kuchnię. Wpisz np. "Szukam włoskiej" lub "Pokaż dostępne lokale".
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Napisz wiadomość..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()">Wyślij</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // Funkcja Resetu
+    function resetChat() {
+        let chatBox = document.getElementById("chat-box");
+        // Czyścimy i przywracamy wiadomość startową
+        chatBox.innerHTML = `
+            <div class="message bot-message">
+                Cześć! Tu Hotable AI. 🍕<br>Pomogę Ci znaleźć stolik lub wybrać kuchnię. Wpisz np. "Szukam włoskiej" lub "Pokaż dostępne lokale".
+            </div>
+        `;
+    }
+
     async function sendMessage() {
         let inputField = document.getElementById("user-input");
         let message = inputField.value.trim();
@@ -176,10 +312,8 @@
         addMessage(message, "user-message");
         inputField.value = "";
 
-        // Pokaż indicator pisania (opcjonalne, dla efektu)
-        // ...
-
         try {
+            // Wysłanie zapytania do serwera Flask
             let response = await fetch("http://127.0.0.1:5000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -187,12 +321,14 @@
             });
             let data = await response.json();
             
-            // Obsługa formatowania nowej linii
-            let formattedResponse = data.response.replace(/\
+            // Formatowanie odpowiedzi
+            let formattedResponse = data.response.replace(/
 /g, '<br>');
+            
             addMessage(formattedResponse, "bot-message");
         } catch (error) {
-            addMessage("Błąd połączenia z serwerem 😞", "bot-message");
+            console.error("Błąd:", error);
+            addMessage("Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py jest uruchomiony.", "bot-message");
         }
     }
 
@@ -200,7 +336,7 @@
         let chatBox = document.getElementById("chat-box");
         let msgDiv = document.createElement("div");
         msgDiv.className = `message ${className}`;
-        msgDiv.innerHTML = text; // Używamy innerHTML dla obsługi <br> i boldowania
+        msgDiv.innerHTML = text;
         chatBox.appendChild(msgDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
