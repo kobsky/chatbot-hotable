@@ -32,6 +32,10 @@ def chat():
     response_text = ""
     restaurant_name = entities.get("restaurant")
 
+    # Dodajemy "check_seats" do wyjątków, aby wymusić listę globalną przy pytaniach ogólnych
+    if not restaurant_name and CONTEXT.get("last_restaurant") and intent not in ["search_cuisine", "list_restaurants", "greet", "list_cuisines", "ask_recommendation", "check_seats"]:
+        restaurant_name = CONTEXT["last_restaurant"]
+
     if intent == "greet":
         CONTEXT["last_restaurant"] = None
         response_text = bot.get_response(intent)
@@ -96,9 +100,6 @@ def chat():
     if intent == "list_cuisines":
         # Logika dla: "Jakie rodzaje kuchni?"
         return jsonify({"response": "Mamy szeroki wybór smaków! Oferujemy kuchnię:\n🇵🇱 **Polską** (Zielnik)\n🇮🇹 **Włoską/Śródziemnomorską** (Porto Azzurro)\n🍔 **StreetFood** (Neon)\n\nNa co się skusisz?"})
-
-    if not restaurant_name:
-        restaurant_name = CONTEXT.get("last_restaurant")
 
     if intent == "check_seats":
         # Jeśli podano nazwę restauracji -> sprawdzamy konkretną
