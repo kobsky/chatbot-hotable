@@ -80,10 +80,14 @@
         "Jakie są dostępne restauracje?",
         "Wymień lokale",
         "Co macie w ofercie?",
-        "Pokaż listę restauracji",
-        "Jakie macie knajpy?",
-        "Gdzie mogę zjeść?",
-        "Lista lokali"
+        "Lista lokali",
+        "Jakaś inna?",
+        "Inna",
+        "Pokaż inne",
+        "Coś innego",
+        "Macie coś innego?",
+        "Wymień wszystkie",
+        "Jakie jeszcze?"
       ],
       "responses": []
     },

@@ -72,12 +72,14 @@ def chat():
              return jsonify({"response": "O której restauracji chcesz posłuchać? Mamy Neon, Zielnik i Porto Azzurro."})
 
     if intent == "list_restaurants":
+        CONTEXT["last_restaurant"] = None
+        
         response_text = (
-            "Aktualnie współpracujemy z 3 wyjątkowymi lokalami:\n"
-            "1. 🍔 **Neon** (StreetFood & Bary)\n"
+            "Aktualnie dostępne restauracje to:\n"
+            "1. 🍔 **Neon** (StreetFood)\n"
             "2. 🍝 **Porto Azzurro** (Śródziemnomorska)\n"
-            "3. 🥗 **Zielnik** (Polska & Nowoczesna)\n\n"
-            "O którym z nich chcesz dowiedzieć się więcej?"
+            "3. 🥗 **Zielnik** (Polska)\n\n"
+            "Napisz nazwę wybranego lokalu, aby sprawdzić szczegóły."
         )
         return jsonify({"response": response_text})
 
