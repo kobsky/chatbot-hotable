@@ -62,6 +62,15 @@ class DatabaseHandler:
             print(f"Błąd DB (dostępność): {e}")
             return None
 
+    def get_all_restaurants(self):
+        if not self.supabase: return []
+        try:
+            response = self.supabase.table('restaurants').select('*').execute()
+            return response.data
+        except Exception as e:
+            print(f"Błąd DB (wszystkie restauracje): {e}")
+            return []
+
 # --- TESTOWANIE LOKALNE ---
 if __name__ == "__main__":
     db = DatabaseHandler()

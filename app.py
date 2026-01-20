@@ -55,7 +55,6 @@ def chat():
             else:
                 response_text = f"Przykro mi, ale nie znalazłem restauracji typu {cuisine} w naszej bazie. 😔"
         else:
-            # FIX: If user asks "what do you recommend" without specifying cuisine, list all restaurants
             response_text = (
                 "Aktualnie dostępne restauracje to:\n"
                 "1. 🍔 **Neon** (StreetFood)\n"
@@ -68,7 +67,7 @@ def chat():
     if intent == "restaurant_info":
         response_prefix = ""
         if not restaurant_name and CONTEXT.get("last_restaurant"):
-            if intent != "book_table": # Warunek bezpieczeństwa
+            if intent != "book_table":
                 restaurant_name = CONTEXT["last_restaurant"]
                 response_prefix = f"(Nawiązując do {restaurant_name}): "
 
@@ -98,23 +97,31 @@ def chat():
         restaurant_name = CONTEXT.get("last_restaurant")
 
     if intent == "check_seats":
+        # Jeśli podano nazwę restauracji -> sprawdzamy konkretną
         if restaurant_name:
             target = db.check_availability(restaurant_name)
             if target:
                 count = target.get('available_tables', 0)
                 CONTEXT["last_restaurant"] = restaurant_name
-                return jsonify({"response": f"W restauracji {restaurant_name} są obecnie {count} wolne miejsca."})
+                return jsonify({"response": f"W restauracji <b>{restaurant_name}</b> mamy obecnie <b>{count}</b> wolnych stolików."})
             else:
-                return jsonify({"response": f"Nie znalazłem danych dla restauracji {restaurant_name}."})
+                return jsonify({"response": f"Nie znalazłem restauracji o nazwie {restaurant_name}."})
+        
+        # Jeśli NIE podano nazwy (pytanie ogólne) -> wypisujemy wszystkie
         else:
-            # FIX: Global check for all restaurants
-            all_restaurants = db.get_all_restaurants()
-            response_text = "Oto sytuacja w naszych lokalach:\n"
-            for r in all_restaurants:
-                seats = r['available_tables']
+            all_rest = db.get_all_restaurants()
+            # Ukrywamy nieaktywne restauracje, np. "Trawnik"
+            all_rest = [r for r in all_rest if r.get('name') != 'Trawnik']
+            
+            if not all_rest:
+                return jsonify({"response": "Nie udało mi się pobrać informacji o dostępności. Spróbuj ponownie później."})
+
+            response_lines = ["Oto stan dostępności w naszych lokalach:<br>"]
+            for r in all_rest:
+                seats = r.get('available_tables', 0)
                 icon = "🟢" if seats > 0 else "🔴"
-                response_text += f"{icon} {r['name']}: {seats} wolne\n"
-            return jsonify({"response": response_text})
+                response_lines.append(f"{icon} <b>{r.get('name')}</b>: {seats} wolnych")
+            return jsonify({"response": "<br>".join(response_lines)})
 
     if intent == "check_contact":
         if restaurant_name:
