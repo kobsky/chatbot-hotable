@@ -49,7 +49,7 @@
           "Sprawdź dostępność Neon", 
           "Gdzie zjem od ręki?"
       ],
-      "responses": ["Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."]
+      "responses": ["Niestety, to jest poza moim zakresem, daj znać czy mogę pomóc w czymś innym?"]
     },
     {
       "tag": "check_hours",
@@ -91,6 +91,11 @@
         "Pokaż listę restauracji", "Jakie macie lokale", "Wymień restauracje", "Jakaś inna?"
       ],
       "responses": []
+    },
+    {
+      "tag": "out_of_scope",
+      "patterns": ["Jaka jest dziś pogoda?", "wynik meczu", "Stany Zjednoczone", "Jak dojechać do Warszawy", "zamów taksówkę", "która godzina"],
+      "responses": ["Przepraszam, ale mogę odpowiadać tylko na pytania związane z restauracjami i rezerwacją stolików."]
     },
     {
       "tag": "fallback",

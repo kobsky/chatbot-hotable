@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from nlp_engine import ChatbotBrain
 from db_handler import DatabaseHandler
-from entities import RESTAURANT_DESCRIPTIONS, RESTAURANT_DETAILS, KW_RESTAURANTS
+from entities import RESTAURANT_DESCRIPTIONS, RESTAURANT_DETAILS, KW_RESTAURANTS, KW_CUISINE
 
 app = Flask(__name__)
 CORS(app)
@@ -14,6 +14,12 @@ print("🚀 System gotowy! Serwer działa.")
 
 CONTEXT = {"last_restaurant": None}
 ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
+
+# Prosta lista słów funkcyjnych do ignorowania przy heurystyce
+COMMON_WORDS = {
+    "w", "jest", "i", "czy", "ma", "ile", "są", "wolnych", "miejsc", "w", "o", "a", "ale", "lub", "nie", "się",
+    "cześć", "hej", "dzień", "dobry", "poproszę", "pokaż", "powiedz", "jaka", "jaki", "jakie", "gdzie", "kiedy", "która"
+}
 
 @app.route('/')
 def index():
@@ -29,7 +35,10 @@ def chat():
     
     print(f"📩 Msg: '{user_message}' | Intent: {intent} | Entities: {entities}")
 
-    # --- FIX: GUARD CLAUSE (Natychmiastowe przerwanie, jeśli nie zrozumiano) ---
+    # --- GUARD CLAUSE: Pytania poza zakresem tematycznym ---
+    if intent == "out_of_scope":
+        return jsonify({"response": bot.get_response(intent)})
+
     if intent == "fallback":
         return jsonify({"response": "Przepraszam, nie zrozumiałem. 🤔\nCzy możesz zapytać inaczej? Spróbuj np.:\n- 'Szukam włoskiej'\n- 'Gdzie są wolne miejsca?'\n- 'Pokaż listę lokali'"})
 
@@ -37,25 +46,18 @@ def chat():
     restaurant_name = entities.get("restaurant")
     cuisine = entities.get('cuisine')
 
-    # --- LOGIKA WYKRYWANIA NIEZNANYCH NAZW (Heurystyka) ---
+    # --- ROZBUDOWANA LOGIKA WYKRYWANIA NIEZNANYCH NAZW (ENTITY GUARD v2) ---
     potential_new_entity = False
-    
-    # Jeśli NIE znaleziono znanej restauracji, sprawdzamy czy użytkownik nie wpisał nazwy własnej (z dużej litery)
     if not restaurant_name:
-        words = user_message.split()
-        # Pobieramy znane słowa kluczowe z entities.py (klucze słownika)
-        known_keywords = set()
-        for k in KW_RESTAURANTS.keys():
-            known_keywords.add(k.lower())
-            
-        for i, word in enumerate(words):
-            clean_word = word.strip('.,?!:').lower()
-            # Ignorujemy pierwsze słowo zdania (często "Czy", "Jak") chyba że to ewidentna nazwa
-            # Sprawdzamy czy słowo jest z Dużej litery i NIE jest znaną encją
-            if word and word[0].isupper() and i > 0 and clean_word not in known_keywords:
+        words = user_message.lower().split()
+        known_keywords = set(KW_RESTAURANTS.keys()) | set(KW_CUISINE.keys()) | COMMON_WORDS
+        
+        for word in words:
+            clean_word = word.strip('.,?!:')
+            if clean_word and clean_word not in known_keywords:
                 potential_new_entity = True
                 break
-    
+
     # FIX: Nie przywracaj kontekstu, jeśli wykryto potencjalną nową nazwę!
     if not restaurant_name and not potential_new_entity and CONTEXT.get("last_restaurant") and intent not in ["search_cuisine", "list_restaurants", "greet", "list_cuisines", "ask_recommendation", "check_seats", "bot_purpose"]:
         restaurant_name = CONTEXT["last_restaurant"]
@@ -125,11 +127,9 @@ def chat():
         return jsonify({"response": "Mamy szeroki wybór smaków! Oferujemy kuchnię:\n🇵🇱 **Polską** (Zielnik)\n🇮🇹 **Włoską/Śródziemnomorską** (Porto Azzurro)\n🍔 **StreetFood** (Neon)\n\nNa co się skusisz?"})
 
     if intent == "check_seats":
-        # SCENARIUSZ 0: Użytkownik pyta o "McDonald" (nieznana nazwa)
         if potential_new_entity and not restaurant_name:
             return jsonify({"response": "Wygląda na to, że pytasz o lokal, którego nie mam w bazie. 🧐\nObsługuję tylko: Neon, Zielnik i Porto Azzurro."})
 
-        # SCENARIUSZ A: Konkretny lokal (znany)
         if restaurant_name:
             target = db.check_availability(restaurant_name)
             if target:
@@ -139,10 +139,8 @@ def chat():
             else:
                 return jsonify({"response": f"Nie znalazłem restauracji o nazwie {restaurant_name}."})
         
-        # Jeśli NIE podano nazwy (pytanie ogólne) -> wypisujemy wszystkie
         else:
             all_rest = db.get_all_restaurants()
-            # Ukrywamy nieaktywne restauracje, np. "Trawnik"
             all_rest = [r for r in all_rest if r.get('name') != 'Trawnik']
             
             if not all_rest:
@@ -156,6 +154,11 @@ def chat():
                 icon = "🟢" if seats > 0 else "🔴"
                 response_lines.append(f"{icon} <b>{r.get('name')}</b>: {seats} wolnych")
             return jsonify({"response": "<br>".join(response_lines)})
+
+    # Fallback dla wszystkich innych intencji, jeśli jest potencjalna nowa encja
+    if potential_new_entity and not restaurant_name:
+        return jsonify({"response": "Wygląda na to, że pytasz o lokal, którego nie mam w bazie. 🧐\nObsługuję tylko: Neon, Zielnik i Porto Azzurro."})
+
 
     if intent == "check_contact":
         if restaurant_name:
