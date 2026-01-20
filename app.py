@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from nlp_engine import ChatbotBrain
 from db_handler import DatabaseHandler
-from entities import RESTAURANT_DESCRIPTIONS, RESTAURANT_DETAILS
+from entities import RESTAURANT_DESCRIPTIONS, RESTAURANT_DETAILS, KW_RESTAURANTS
 
 app = Flask(__name__)
 CORS(app)
@@ -35,9 +35,29 @@ def chat():
 
     response_text = ""
     restaurant_name = entities.get("restaurant")
+    cuisine = entities.get('cuisine')
 
-    # Dodajemy "check_seats" do wyjątków, aby wymusić listę globalną przy pytaniach ogólnych
-    if not restaurant_name and CONTEXT.get("last_restaurant") and intent not in ["search_cuisine", "list_restaurants", "greet", "list_cuisines", "ask_recommendation", "check_seats"]:
+    # --- LOGIKA WYKRYWANIA NIEZNANYCH NAZW (Heurystyka) ---
+    potential_new_entity = False
+    
+    # Jeśli NIE znaleziono znanej restauracji, sprawdzamy czy użytkownik nie wpisał nazwy własnej (z dużej litery)
+    if not restaurant_name:
+        words = user_message.split()
+        # Pobieramy znane słowa kluczowe z entities.py (klucze słownika)
+        known_keywords = set()
+        for k in KW_RESTAURANTS.keys():
+            known_keywords.add(k.lower())
+            
+        for i, word in enumerate(words):
+            clean_word = word.strip('.,?!:').lower()
+            # Ignorujemy pierwsze słowo zdania (często "Czy", "Jak") chyba że to ewidentna nazwa
+            # Sprawdzamy czy słowo jest z Dużej litery i NIE jest znaną encją
+            if word and word[0].isupper() and i > 0 and clean_word not in known_keywords:
+                potential_new_entity = True
+                break
+    
+    # FIX: Nie przywracaj kontekstu, jeśli wykryto potencjalną nową nazwę!
+    if not restaurant_name and not potential_new_entity and CONTEXT.get("last_restaurant") and intent not in ["search_cuisine", "list_restaurants", "greet", "list_cuisines", "ask_recommendation", "check_seats", "bot_purpose"]:
         restaurant_name = CONTEXT["last_restaurant"]
 
     if intent == "greet":
@@ -51,7 +71,6 @@ def chat():
 
     if intent == 'search_cuisine':
         CONTEXT["last_restaurant"] = None
-        cuisine = entities.get('cuisine')
         if cuisine:
             restaurants = db.get_restaurants_by_cuisine(cuisine)
             if restaurants:
@@ -106,7 +125,11 @@ def chat():
         return jsonify({"response": "Mamy szeroki wybór smaków! Oferujemy kuchnię:\n🇵🇱 **Polską** (Zielnik)\n🇮🇹 **Włoską/Śródziemnomorską** (Porto Azzurro)\n🍔 **StreetFood** (Neon)\n\nNa co się skusisz?"})
 
     if intent == "check_seats":
-        # Jeśli podano nazwę restauracji -> sprawdzamy konkretną
+        # SCENARIUSZ 0: Użytkownik pyta o "McDonald" (nieznana nazwa)
+        if potential_new_entity and not restaurant_name:
+            return jsonify({"response": "Wygląda na to, że pytasz o lokal, którego nie mam w bazie. 🧐\nObsługuję tylko: Neon, Zielnik i Porto Azzurro."})
+
+        # SCENARIUSZ A: Konkretny lokal (znany)
         if restaurant_name:
             target = db.check_availability(restaurant_name)
             if target:
