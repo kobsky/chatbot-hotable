@@ -92,7 +92,7 @@ class DatabaseHandler:
         """Pobieranie restauracji według typu kuchni (ignoruje wielkość liter)."""
         result = self._make_request(
             "restaurants",
-            params={"select": "*", "cuisine": f"ilike.{cuisine}"}
+            params={"select": "*", "cuisine": f"ilike.%{cuisine}%"}
         )
         return result if result else []
     
@@ -169,7 +169,7 @@ if __name__ == "__main__":
             print("  Brak danych lub pusta tabela")
         
         print("\n🍕 Test pobierania po kuchni (Polska):")
-        polish = db.get_restaurants_by_cuisine("Polska")
+        polish = db.get_restaurants_by_cuisine("polska")
         if polish:
             for r in polish:
                 print(f"  - {r.get('name')}")

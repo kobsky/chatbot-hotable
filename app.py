@@ -57,7 +57,7 @@ def detect_unknown_entity(message, restaurant_name):
     known_keywords = set(KW_RESTAURANTS.keys()) | set(KW_CUISINE.keys()) | COMMON_WORDS
     
     for word in words:
-        clean_word = word.strip('.,?!:;"\'-')
+        clean_word = word.strip('.,?!:;\"\'-')
         if clean_word and len(clean_word) > 2 and clean_word not in known_keywords:
             # Sprawdzenie czy to nie jest część znanej frazy
             if not any(clean_word in kw for kw in known_keywords):
@@ -166,6 +166,33 @@ def chat():
     """
     data = request.json
     user_message = data.get('message', '').strip()
+
+    # --- SONDA DIAGNOSTYCZNA v2: INSPEKTOR KOLUMN ---
+    if user_message.strip().upper() == "DIAGNOZA":
+        print("\n" + "="*50)
+        print("🕵️ INSPEKTOR KOLUMN BAZY DANYCH")
+        print("="*50)
+        
+        try:
+            # Pobieramy 1 rekord, żeby zobaczyć strukturę
+            all_rows = db.get_all_restaurants()
+            
+            if all_rows and len(all_rows) > 0:
+                first_record = all_rows[0]
+                print("✅ Udało się pobrać przykładowy rekord.")
+                print("\n🔑 DOSTĘPNE KOLUMNY (KLUCZE) W BAZIE:")
+                print(list(first_record.keys()))
+                
+                print("\n📄 PRZYKŁADOWE DANE:")
+                print(first_record)
+            else:
+                print("⚠️ Baza zwróciła pustą listę. Czy tabela 'restaurants' ma dane?")
+
+        except Exception as e:
+            print(f"❌ BŁĄD KRYTYCZNY: {e}")
+        
+        print("="*50 + "\n")
+        return jsonify({"response": "Sprawdź terminal - wypisałem dostępne kolumny."})
     
     if not user_message:
         return jsonify({"response": "Nie otrzymałem wiadomości. Spróbuj ponownie."})
@@ -350,7 +377,7 @@ def chat():
             results = db.get_restaurants_by_cuisine(cuisine)
             
             if results:
-                lines = [f"🔎 Oto lokale z kategorią **{cuisine}**:"]
+                lines = [f"🔎 Oto lokale z kategorią **{cuisine}**:",]
                 for r in results:
                     icon = "🟢" if r.get('available_tables', 0) > 0 else "🔴"
                     lines.append(f"{icon} **{r['name']}**")
