@@ -3,26 +3,79 @@
     {
       "tag": "greet",
       "patterns": [
-        "Cześć", "cześć", "Czesc", "Dzień dobry", "Hej", "Witam", "Start",
-        "Dobry wieczór", "Siema", "Elo", "Hi", "Hello", "Rozpocznij", "Hejka"
+        "Cześć",
+        "cześć",
+        "Czesc",
+        "Dzień dobry",
+        "Hej",
+        "Witam",
+        "Start",
+        "Dobry wieczór",
+        "Siema",
+        "Elo",
+        "Hi",
+        "Hello",
+        "Rozpocznij",
+        "Hejka"
       ],
-      "responses": ["Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?", "Cześć! Szukasz stolika czy konkretnej kuchni?"]
+      "responses": [
+        "Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?",
+        "Cześć! Szukasz stolika czy konkretnej kuchni?"
+      ]
     },
     {
       "tag": "bot_purpose",
-      "patterns": ["Od czego jesteś?", "Co potrafisz?", "Kim jesteś?", "W czym pomagasz?", "Co tu mogę zrobić?", "Do czego służysz?"],
-      "responses": ["Jestem Twoim kulinarnym asystentem. Pomogę Ci znaleźć idealną restaurację, sprawdzę dostępność stolików w czasie rzeczywistym i podpowiem, gdzie zjeść."]
+      "patterns": [
+        "Od czego jesteś?",
+        "Co potrafisz?",
+        "Kim jesteś?",
+        "W czym pomagasz?",
+        "Co tu mogę zrobić?",
+        "Do czego służysz?",
+        "od czego jesteś?",
+        "co potrafisz?",
+        "kim jesteś?",
+        "w czym pomagasz?",
+        "co tu mogę zrobić?",
+        "do czego służysz?"
+      ],
+      "responses": [
+        "Jestem Twoim kulinarnym asystentem. Pomogę Ci znaleźć idealną restaurację, sprawdzę dostępność stolików w czasie rzeczywistym i podpowiem, gdzie zjeść."
+      ]
     },
     {
-        "tag": "book_table",
-        "patterns": ["Zarezerwuj stolik", "Chcę rezerwację", "Bukuj", "Rezerwacja", "Zarezerwuj mi", "Chcę zamówić stolik", "Umów mnie"],
-        "responses": ["Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym. Aby dokonać rezerwacji, skontaktuj się bezpośrednio z lokalem lub użyj przycisku na stronie."]
+      "tag": "book_table",
+      "patterns": [
+        "Zarezerwuj stolik",
+        "Chcę rezerwację",
+        "Bukuj",
+        "Rezerwacja",
+        "Zarezerwuj mi",
+        "Chcę zamówić stolik",
+        "Umów mnie"
+      ],
+      "responses": [
+        "Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym. Aby dokonać rezerwacji, skontaktuj się bezpośrednio z lokalem lub użyj przycisku na stronie."
+      ]
     },
     {
       "tag": "search_cuisine",
       "patterns": [
-        "Jestem głodny", "Szukam restauracji", "Gdzie zjem?",
-        "Szukam restauracji", "Gdzie zjem tanio?", "Pokaż restauracje z kuchnią polską", "Chcę zjeść coś włoskiego", "Znajdź mi pizzerię", "Jakiś dobry burger?", "Polska", "Polskiej", "Włoska", "Włoskiej", "Burger", "Pizza",
+        "Jestem głodny",
+        "Szukam restauracji",
+        "Gdzie zjem?",
+        "Szukam restauracji",
+        "Gdzie zjem tanio?",
+        "Pokaż restauracje z kuchnią polską",
+        "Chcę zjeść coś włoskiego",
+        "Znajdź mi pizzerię",
+        "Jakiś dobry burger?",
+        "Polska",
+        "Polskiej",
+        "Włoska",
+        "Włoskiej",
+        "Burger",
+        "Pizza",
         "a z kuchni streetfood",
         "streetfood",
         "street food",
@@ -31,34 +84,53 @@
         "coś szybkiego",
         "szukam streetfoodu"
       ],
-      "responses": ["Jasne, jakiej kuchni szukasz?", "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"]
+      "responses": [
+        "Jasne, jakiej kuchni szukasz?",
+        "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"
+      ]
     },
     {
       "tag": "check_seats",
       "patterns": [
-          "Ile jest wolnych miejsc w Porto Azzurro?",
-          "Ile jest wolnych miejsc?",
-          "Ile wolnych stolików ma Zielnik?",
-          "Stan miejsc w Neonie",
-          "Sprawdź dostępność",
-          "Czy są wolne miejsca?",
-          "W jakich restauracjach znajdę wolne stoliki?", 
-          "Gdzie są miejsca?", 
-          "Ile jest miejsc w Neonie?", 
-          "Stan stolików", 
-          "Sprawdź dostępność Neon", 
-          "Gdzie zjem od ręki?"
+        "Ile jest wolnych miejsc w Porto Azzurro?",
+        "Ile jest wolnych miejsc?",
+        "Ile wolnych stolików ma Zielnik?",
+        "Stan miejsc w Neonie",
+        "Sprawdź dostępność",
+        "Czy są wolne miejsca?",
+        "W jakich restauracjach znajdę wolne stoliki?",
+        "Gdzie są miejsca?",
+        "Ile jest miejsc w Neonie?",
+        "Stan stolików",
+        "Sprawdź dostępność Neon",
+        "Gdzie zjem od ręki?"
       ],
-      "responses": ["Niestety, to jest poza moim zakresem, daj znać czy mogę pomóc w czymś innym?"]
+      "responses": [
+        "Niestety, to jest poza moim zakresem, daj znać czy mogę pomóc w czymś innym?"
+      ]
     },
     {
       "tag": "check_hours",
-      "patterns": ["O której restauracja się zamyka?", "Czy otwarte w niedzielę?", "Godziny otwarcia Neon", "Do której czynne Porto Azzurro?", "Kiedy otwieracie?", "W jakich godzinach działa Zielnik?"]
+      "patterns": [
+        "O której restauracja się zamyka?",
+        "Czy otwarte w niedzielę?",
+        "Godziny otwarcia Neon",
+        "Do której czynne Porto Azzurro?",
+        "Kiedy otwieracie?",
+        "W jakich godzinach działa Zielnik?"
+      ]
     },
     {
       "tag": "restaurant_info",
       "patterns": [
-        "Co to jest Zielnik?", "Opowiedz mi o Porto Azzurro", "Opis restauracji Neon", "Powiedz mi coś o niej", "Opowiedz coś więcej", "Co to za miejsce?", "Opowiedz o niej", "Opisz Zielnik",
+        "Co to jest Zielnik?",
+        "Opowiedz mi o Porto Azzurro",
+        "Opis restauracji Neon",
+        "Powiedz mi coś o niej",
+        "Opowiedz coś więcej",
+        "Co to za miejsce?",
+        "Opowiedz o niej",
+        "Opisz Zielnik",
         "restauracja Neon?",
         "Neon",
         "co wies o neonie?",
@@ -66,50 +138,124 @@
         "a neon?",
         "knajpa neon"
       ],
-      "responses": [""]
+      "responses": [
+        ""
+      ]
     },
     {
       "tag": "check_contact",
       "patterns": [
-        "Jaki jest numer do Neonu?", "Podaj adres Zielnika", "Gdzie jest Porto Azzurro?", "Kontakt do restauracji", "Jak dojadę?", "Numer telefonu", "Gdzie to jest?", "Jaki ma adres?", "Podaj mi adres", "Jaki jest adres?", "Gdzie to jest dokładnie?", "Jaki tam jest numer?", "Numer telefonu poproszę", "Podaj adres", "Gdzie to jest?", "Jaki jest numer?", "Adres poproszę",
+        "Jaki jest numer do Neonu?",
+        "Podaj adres Zielnika",
+        "Gdzie jest Porto Azzurro?",
+        "Kontakt do restauracji",
+        "Jak dojadę?",
+        "Numer telefonu",
+        "Gdzie to jest?",
+        "Jaki ma adres?",
+        "Podaj mi adres",
+        "Jaki jest adres?",
+        "Gdzie to jest dokładnie?",
+        "Jaki tam jest numer?",
+        "Numer telefonu poproszę",
+        "Podaj adres",
+        "Gdzie to jest?",
+        "Jaki jest numer?",
+        "Adres poproszę",
         "adres neonu",
         "telefon do neonu"
       ]
     },
     {
       "tag": "check_capacity",
-      "patterns": ["Ile mają stolików?", "Czy to duży lokal?", "Jaka jest pojemność Neonu?", "Dużo macie miejsca?", "Maksymalna liczba gości"]
+      "patterns": [
+        "Ile mają stolików?",
+        "Czy to duży lokal?",
+        "Jaka jest pojemność Neonu?",
+        "Dużo macie miejsca?",
+        "Maksymalna liczba gości"
+      ]
     },
     {
-        "tag": "unavailable_cuisine",
-        "patterns": ["Francuska", "Francuskiej", "Francuskiego", "Coś francuskiego", "Zjadłbym kuchnię francuską", "Chińska", "Chińskiej", "Chińczyka", "Azjatycka", "Sushi", "Japońska", "Meksykańska", "Indyjska", "Kebab", "Turecka", "Amerykańska"],
-        "responses": ["Niestety nie mamy tej kuchni w bazie. Aktualnie dostępne kuchnie to: Polska, StreetFood i Włoska. Mogę zaproponować restaurację z którejś z tych kuchni?"]
+      "tag": "unavailable_cuisine",
+      "patterns": [
+        "Francuska",
+        "Francuskiej",
+        "Francuskiego",
+        "Coś francuskiego",
+        "Zjadłbym kuchnię francuską",
+        "Chińska",
+        "Chińskiej",
+        "Chińczyka",
+        "Azjatycka",
+        "Sushi",
+        "Japońska",
+        "Meksykańska",
+        "Indyjska",
+        "Kebab",
+        "Turecka",
+        "Amerykańska"
+      ],
+      "responses": [
+        "Niestety nie mamy tej kuchni w bazie. Aktualnie dostępne kuchnie to: Polska, StreetFood i Włoska. Mogę zaproponować restaurację z którejś z tych kuchni?"
+      ]
     },
     {
       "tag": "list_restaurants",
       "patterns": [
-        "Pokaż listę restauracji", "Jakie macie lokale", "Wymień restauracje", "Jakaś inna?"
+        "Pokaż listę restauracji",
+        "Jakie macie lokale",
+        "Wymień restauracje",
+        "Jakaś inna?"
       ],
       "responses": []
     },
     {
       "tag": "out_of_scope",
-      "patterns": ["Jaka jest dziś pogoda?", "wynik meczu", "Stany Zjednoczone", "Jak dojechać do Warszawy", "zamów taksówkę", "która godzina"],
-      "responses": ["Przepraszam, ale mogę odpowiadać tylko na pytania związane z restauracjami i rezerwacją stolików."]
+      "patterns": [
+        "Jaka jest dziś pogoda?",
+        "wynik meczu",
+        "Stany Zjednoczone",
+        "Jak dojechać do Warszawy",
+        "zamów taksówkę",
+        "która godzina"
+      ],
+      "responses": [
+        "Przepraszam, ale mogę odpowiadać tylko na pytania związane z restauracjami i rezerwacją stolików."
+      ]
     },
     {
       "tag": "fallback",
       "patterns": [],
-      "responses": ["Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."]
+      "responses": [
+        "Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."
+      ]
     },
     {
       "tag": "ask_recommendation",
-      "patterns": ["Którą polecasz?", "Co mi doradzisz?", "Co wybrać?", "Poleć coś", "Która najlepsza?", "Nie wiem co wybrać", "Pomóż mi wybrać", "Co polecasz?", "Nie wiem co zjeść"],
+      "patterns": [
+        "Którą polecasz?",
+        "Co mi doradzisz?",
+        "Co wybrać?",
+        "Poleć coś",
+        "Która najlepsza?",
+        "Nie wiem co wybrać",
+        "Pomóż mi wybrać",
+        "Co polecasz?",
+        "Nie wiem co zjeść"
+      ],
       "responses": []
     },
     {
       "tag": "list_cuisines",
-      "patterns": ["Jakie rodzaje kuchni macie?", "Jaka kuchnia?", "Co serwujecie?", "Wybór kuchni", "Kategorie jedzenia", "Jakie jedzenie"],
+      "patterns": [
+        "Jakie rodzaje kuchni macie?",
+        "Jaka kuchnia?",
+        "Co serwujecie?",
+        "Wybór kuchni",
+        "Kategorie jedzenia",
+        "Jakie jedzenie"
+      ],
       "responses": []
     }
   ]
