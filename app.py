@@ -1,19 +1,13 @@
 # =============================================================================
 # APP.PY - Główna aplikacja Flask dla chatbota Hotable
+# Dane pobierane z Supabase
 # =============================================================================
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from nlp_engine import ChatbotBrain
 from db_handler import DatabaseHandler
-from entities import (
-    RESTAURANT_DESCRIPTIONS, 
-    RESTAURANT_DETAILS, 
-    KW_RESTAURANTS, 
-    KW_CUISINE,
-    COMMON_WORDS,
-    CUISINE_TO_RESTAURANT
-)
+from entities import KW_RESTAURANTS, KW_CUISINE, COMMON_WORDS
 
 # =============================================================================
 # INICJALIZACJA APLIKACJI
@@ -34,18 +28,22 @@ CONTEXT = {
     "conversation_count": 0
 }
 
-# Lista aktywnych lokali w systemie
-ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
-
 
 # =============================================================================
 # FUNKCJE POMOCNICZE
 # =============================================================================
 
+def get_active_venues():
+    """Pobieranie listy aktywnych lokali z bazy"""
+    restaurants = db.get_all_restaurants()
+    return [r.get('name') for r in restaurants if r.get('name')]
+
+
 def reset_context():
     """Resetowanie kontekstu konwersacji"""
     CONTEXT["last_restaurant"] = None
     CONTEXT["last_cuisine"] = None
+
 
 def detect_unknown_entity(message, restaurant_name):
     """
@@ -67,30 +65,49 @@ def detect_unknown_entity(message, restaurant_name):
     
     return False
 
-def format_restaurant_list(restaurants):
-    """Formatowanie listy restauracji do wyświetlenia"""
-    if not restaurants:
-        return "Brak dostępnych restauracji."
+
+def format_restaurant_description(restaurant_data):
+    """Formatowanie opisu restauracji z danych bazy"""
+    if not restaurant_data:
+        return None
     
-    lines = ["Oto dostępne restauracje:\n"]
+    name = restaurant_data.get('name', 'Nieznana')
+    cuisine = restaurant_data.get('cuisine', '')
+    description = restaurant_data.get('description', '')
     
+    # Ikony dla typów kuchni
     cuisine_icons = {
         "StreetFood": "🍔",
         "Śródziemnomorska": "🍝",
         "Polska": "🥗"
     }
+    icon = cuisine_icons.get(cuisine, "🍽️")
     
-    for r in restaurants:
-        name = r.get('name', 'Nieznana')
-        cuisine = r.get('cuisine', '')
-        icon = cuisine_icons.get(cuisine, "🍽️")
-        seats = r.get('available_tables', 0)
-        status = "🟢" if seats > 0 else "🔴"
-        
-        lines.append(f"{icon} **{name}** ({cuisine}) - {status} {seats} wolnych stolików")
+    if description:
+        return f"{icon} **{name}** ({cuisine})\n\n{description}"
+    else:
+        return f"{icon} **{name}** - Restauracja z kuchnią {cuisine}."
+
+
+def format_restaurant_details(restaurant_data):
+    """Formatowanie szczegółów kontaktowych restauracji"""
+    if not restaurant_data:
+        return None
     
-    lines.append("\nNapisz nazwę lokalu, aby poznać szczegóły.")
-    return "\n".join(lines)
+    name = restaurant_data.get('name', 'Nieznana')
+    phone = restaurant_data.get('phone', 'Brak danych')
+    address = restaurant_data.get('address', 'Brak danych')
+    hours = restaurant_data.get('hours', 'Brak danych')
+    
+    return {
+        'name': name,
+        'phone': phone,
+        'address': address,
+        'hours': hours,
+        'max_tables': restaurant_data.get('max_tables', 'N/A'),
+        'features': restaurant_data.get('features', [])
+    }
+
 
 def get_seats_response(restaurant_name=None):
     """Generowanie odpowiedzi o dostępnych miejscach"""
@@ -99,8 +116,8 @@ def get_seats_response(restaurant_name=None):
         if target:
             count = target.get('available_tables', 0)
             status = "🟢" if count > 0 else "🔴"
-            CONTEXT["last_restaurant"] = restaurant_name
-            return f"{status} W restauracji **{restaurant_name}** mamy obecnie **{count}** wolnych stolików."
+            CONTEXT["last_restaurant"] = target.get('name', restaurant_name)
+            return f"{status} W restauracji **{target.get('name')}** mamy obecnie **{count}** wolnych stolików."
         else:
             return f"❌ Nie znalazłem restauracji o nazwie {restaurant_name}."
     else:
@@ -111,8 +128,6 @@ def get_seats_response(restaurant_name=None):
         
         lines = ["📊 **Stan dostępności stolików:**\n"]
         for r in all_rest:
-            if r.get('name') not in ACTIVE_VENUES:
-                continue
             seats = r.get('available_tables', 0)
             icon = "🟢" if seats > 0 else "🔴"
             lines.append(f"{icon} **{r.get('name')}**: {seats} wolnych")
@@ -136,7 +151,7 @@ def health_check():
     """Endpoint do sprawdzania stanu aplikacji"""
     return jsonify({
         "status": "healthy",
-        "active_venues": ACTIVE_VENUES,
+        "active_venues": get_active_venues(),
         "context": CONTEXT
     })
 
@@ -151,6 +166,14 @@ def chat():
     """
     data = request.json
     user_message = data.get('message', '').strip()
+
+    # --- DIAGNOSTYKA BAZY DANYCH ---
+    if "debug_db" in user_message.lower() or "szukam" in user_message.lower():
+        all_rows = db.get_all_restaurants()
+        print("\n--- ZRZUT DANYCH Z BAZY (Kolumna 'cuisine') ---")
+        for r in all_rows:
+            print(f"Lokal: '{r.get('name')}' | Kuchnia w bazie: '{r.get('cuisine')}'")
+        print("-----------------------------------------------\n")
     
     if not user_message:
         return jsonify({"response": "Nie otrzymałem wiadomości. Spróbuj ponownie."})
@@ -215,9 +238,9 @@ def chat():
     if intent == "book_table":
         response = bot.get_response(intent)
         if restaurant_name:
-            details = RESTAURANT_DETAILS.get(restaurant_name)
-            if details:
-                response += f"\n\n📞 Telefon do {restaurant_name}: {details['phone']}"
+            details = db.get_restaurant_details(restaurant_name)
+            if details and details.get('phone'):
+                response += f"\n\n📞 Telefon do {details.get('name')}: {details.get('phone')}"
         return jsonify({"response": response})
     
     # --- UNAVAILABLE_CUISINE (Niedostępna kuchnia) ---
@@ -227,53 +250,155 @@ def chat():
     # --- LIST_RESTAURANTS (Lista lokali) ---
     if intent == "list_restaurants":
         reset_context()
-        response = (
-            "🍽️ **Aktualnie dostępne restauracje:**\n\n"
-            "1. 🍔 **Neon** - StreetFood, burgery, kuchnia uliczna\n"
-            "2. 🍝 **Porto Azzurro** - Kuchnia śródziemnomorska, włoska\n"
-            "3. 🥗 **Zielnik** - Tradycyjna kuchnia polska\n\n"
-            "Napisz nazwę wybranego lokalu, aby sprawdzić szczegóły lub dostępność."
-        )
+        
+        # Pobieranie listy restauracji z bazy
+        restaurants = db.get_all_restaurants()
+        
+        # --- FILTR: Lista dozwolonych restauracji ---
+        ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
+        
+        if restaurants:
+            cuisine_icons = {
+                "StreetFood": "🍔",
+                "Śródziemnomorska": "🍝",
+                "Polska": "🥗"
+            }
+            
+            lines = ["🍽️ **Aktualnie dostępne restauracje:**\n"]
+            
+            # Używamy licznika ręcznie, żeby numeracja była ciągła po filtracji
+            counter = 1
+            
+            for r in restaurants:
+                name = r.get('name', 'Nieznana')
+                
+                # --- FILTRACJA: Pomiń jeśli nie ma na liście ---
+                if name not in ACTIVE_VENUES:
+                    continue
+                
+                cuisine = r.get('cuisine', '')
+                icon = cuisine_icons.get(cuisine, "🍽️")
+                
+                # Dodajemy do listy tylko zweryfikowane lokale
+                lines.append(f"{counter}. {icon} **{name}** - {cuisine}")
+                counter += 1
+            
+            lines.append("\nNapisz nazwę wybranego lokalu, aby sprawdzić szczegóły lub dostępność.")
+            response = "\n".join(lines)
+        else:
+            response = "Nie udało się pobrać listy restauracji. Spróbuj ponownie później."
+        
         return jsonify({"response": response})
     
     # --- LIST_CUISINES (Rodzaje kuchni) ---
     if intent == "list_cuisines":
-        return jsonify({"response": bot.get_response(intent)})
+        # Pobieranie unikalnych kuchni z bazy
+        restaurants = db.get_all_restaurants()
+        cuisines = set()
+        cuisine_restaurants = {}
+        
+        for r in restaurants:
+            cuisine = r.get('cuisine')
+            name = r.get('name')
+            if cuisine:
+                cuisines.add(cuisine)
+                if cuisine not in cuisine_restaurants:
+                    cuisine_restaurants[cuisine] = []
+                cuisine_restaurants[cuisine].append(name)
+        
+        if cuisines:
+            cuisine_icons = {
+                "StreetFood": "🍔",
+                "Śródziemnomorska": "🍝",
+                "Polska": "🥗"
+            }
+            
+            lines = ["Mamy szeroki wybór smaków! 🌍\n\nOferujemy kuchnię:"]
+            for cuisine in sorted(cuisines):
+                icon = cuisine_icons.get(cuisine, "🍽️")
+                restaurants_list = ", ".join(cuisine_restaurants.get(cuisine, []))
+                lines.append(f"{icon} **{cuisine}** → {restaurants_list}")
+            
+            lines.append("\nKtóra Cię interesuje?")
+            response = "\n".join(lines)
+        else:
+            response = bot.get_response(intent)
+        
+        return jsonify({"response": response})
     
     # --- ASK_RECOMMENDATION (Rekomendacja) ---
     if intent == "ask_recommendation":
-        return jsonify({"response": bot.get_response(intent)})
+        # Pobieranie restauracji z bazy do rekomendacji
+        restaurants = db.get_all_restaurants()
+        
+        if restaurants:
+            cuisine_icons = {
+                "StreetFood": "🍔",
+                "Śródziemnomorska": "🍝",
+                "Polska": "🥗"
+            }
+            
+            lines = ["Zależy, na co masz ochotę! 😋\n"]
+            for r in restaurants:
+                name = r.get('name', '')
+                cuisine = r.get('cuisine', '')
+                icon = cuisine_icons.get(cuisine, "🍽️")
+                lines.append(f"• {icon} **{cuisine}** → {name}")
+            
+            lines.append("\nNa co się skusisz?")
+            response = "\n".join(lines)
+        else:
+            response = bot.get_response(intent)
+        
+        return jsonify({"response": response})
     
     # --- SEARCH_CUISINE (Szukanie po typie kuchni) ---
     if intent == "search_cuisine":
-        reset_context()
+        # --- DEBUG MODE START ---
+        print(f"DEBUG: Szukam kuchni: '{cuisine}'")
+        
+        # Lista aktywnych lokali (Hard Filter)
+        ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
         
         if cuisine:
-            restaurants = db.get_restaurants_by_cuisine(cuisine)
-            if restaurants:
-                CONTEXT["last_restaurant"] = restaurants[0]['name']
-                CONTEXT["last_cuisine"] = cuisine
+            # 1. Pobranie z bazy
+            results = db.get_restaurants_by_cuisine(cuisine)
+            print(f"DEBUG: Wyniki z bazy (surowe): {results}")
+            
+            # 2. Filtracja po ACTIVE_VENUES
+            active_results = []
+            
+            # Zabezpieczenie: jeśli baza nic nie zwróciła, results może być None
+            if results:
+                for r in results:
+                    # Debugowanie nazw (czy nie ma spacji, literówek?)
+                    db_name = r.get('name')
+                    print(f"DEBUG: Sprawdzam lokal z bazy: '{db_name}' vs ACTIVE_VENUES")
+                    
+                    if db_name in ACTIVE_VENUES:
+                        active_results.append(r)
+                    else:
+                        print(f"DEBUG: Odrzucono '{db_name}' (nie ma na liście aktywnych)")
+            
+            print(f"DEBUG: Wyniki końcowe po filtracji: {active_results}")
+
+            if active_results:
+                # Logika wyświetlania listy
+                lines = [f"🔎 Oto lokale z kategorią **{cuisine}**:",]
+                for r in active_results:
+                    icon = "🟢" if r.get('available_tables', 0) > 0 else "🔴"
+                    lines.append(f"{icon} **{r['name']}**")
                 
-                lines = [f"🍴 Restauracje z kuchnią **{cuisine}**:\n"]
-                for r in restaurants:
-                    seats = r.get('available_tables', 0)
-                    icon = "🟢" if seats > 0 else "🔴"
-                    lines.append(f"• **{r['name']}** ({icon} Wolne stoliki: {seats})")
-                
-                lines.append("\n💡 Chcesz poznać szczegóły któregoś lokalu?")
-                response = "\n".join(lines)
+                # Zapisujemy kontekst (bierzemy pierwszy z listy jako domyślny)
+                if active_results:
+                    CONTEXT["last_restaurant"] = active_results[0]['name']
+                    
+                return jsonify({"response": "\n".join(lines)})
             else:
-                response = f"😔 Przepraszam, nie znalazłem restauracji typu **{cuisine}** w naszej bazie."
+                return jsonify({"response": f"😔 Przepraszam, nie znalazłem aktywnych restauracji typu **{cuisine}** w naszej bazie.\n(Debug Info: NLP='{cuisine}', Wynik Bazy={len(results) if results else 0}, Po filtrze={len(active_results)})"})
         else:
-            response = (
-                "🤔 Jakiej kuchni szukasz?\n\n"
-                "Mamy do wyboru:\n"
-                "• 🇵🇱 **Polską** (Zielnik)\n"
-                "• 🍝 **Włoską/Śródziemnomorską** (Porto Azzurro)\n"
-                "• 🍔 **StreetFood** (Neon)"
-            )
-        
-        return jsonify({"response": response})
+            # Obsługa intencji list_cuisines w ramach search (gdy user nie poda kuchni)
+            return jsonify({"response": "Mamy szeroki wybór smaków! 😋\nOferujemy kuchnię:\n🇵🇱 **Polska** (Zielnik)\n🍝 **Śródziemnomorska** (Porto Azzurro)\n🍔 **StreetFood** (Neon)"})
     
     # --- RESTAURANT_INFO (Informacje o restauracji) ---
     if intent == "restaurant_info":
@@ -282,28 +407,33 @@ def chat():
             restaurant_name = CONTEXT["last_restaurant"]
         
         if restaurant_name:
-            CONTEXT["last_restaurant"] = restaurant_name
-            description = RESTAURANT_DESCRIPTIONS.get(restaurant_name)
+            # Pobieranie danych z bazy
+            restaurant_data = db.get_restaurant_details(restaurant_name)
             
-            if description:
-                details = RESTAURANT_DETAILS.get(restaurant_name, {})
-                response = description
+            if restaurant_data:
+                CONTEXT["last_restaurant"] = restaurant_data.get('name')
                 
-                # Dodanie podstawowych informacji
+                # Formatowanie odpowiedzi
+                description = format_restaurant_description(restaurant_data)
+                details = format_restaurant_details(restaurant_data)
+                
+                response = description
                 if details:
-                    response += f"\n\n📍 **Adres:** {details.get('address', 'Brak danych')}"
-                    response += f"\n🕒 **Godziny:** {details.get('hours', 'Brak danych')}"
+                    response += f"\n\n📍 **Adres:** {details['address']}"
+                    response += f"\n🕒 **Godziny:** {details['hours']}"
                 
                 return jsonify({"response": response})
             else:
-                return jsonify({"response": f"❌ Brak opisu dla restauracji {restaurant_name}."})
+                return jsonify({"response": f"❌ Nie znalazłem restauracji o nazwie {restaurant_name}."})
         else:
+            # Pobierz listę restauracji z bazy
+            restaurants = db.get_all_restaurants()
+            names = [r.get('name') for r in restaurants if r.get('name')]
+            
             response = (
                 "O której restauracji chcesz posłuchać? 🤔\n\n"
-                "Dostępne lokale:\n"
-                "• 🍔 Neon\n"
-                "• 🍝 Porto Azzurro\n"
-                "• 🥗 Zielnik"
+                "Dostępne lokale:\n" +
+                "\n".join([f"• {name}" for name in names])
             )
             return jsonify({"response": response})
     
@@ -311,12 +441,13 @@ def chat():
     if intent == "check_seats":
         # Obsługa nieznanej nazwy
         if potential_unknown and not restaurant_name:
+            restaurants = db.get_all_restaurants()
+            names = [r.get('name') for r in restaurants if r.get('name')]
+            
             response = (
                 "🧐 Wygląda na to, że pytasz o lokal, którego nie mam w bazie.\n\n"
-                "Obsługuję tylko:\n"
-                "• Neon\n"
-                "• Zielnik\n"
-                "• Porto Azzurro"
+                "Obsługuję tylko:\n" +
+                "\n".join([f"• {name}" for name in names])
             )
             return jsonify({"response": response})
         
@@ -334,11 +465,12 @@ def chat():
             restaurant_name = CONTEXT["last_restaurant"]
         
         if restaurant_name:
-            details = RESTAURANT_DETAILS.get(restaurant_name)
-            if details:
-                CONTEXT["last_restaurant"] = restaurant_name
+            details_data = db.get_restaurant_details(restaurant_name)
+            if details_data:
+                details = format_restaurant_details(details_data)
+                CONTEXT["last_restaurant"] = details['name']
                 response = (
-                    f"📍 **{restaurant_name} - Dane kontaktowe:**\n\n"
+                    f"📍 **{details['name']} - Dane kontaktowe:**\n\n"
                     f"🏠 **Adres:** {details['address']}\n"
                     f"📞 **Telefon:** {details['phone']}\n"
                     f"🕒 **Godziny otwarcia:** {details['hours']}"
@@ -347,9 +479,17 @@ def chat():
             else:
                 return jsonify({"response": f"❌ Nie mam danych kontaktowych dla {restaurant_name}."})
         else:
+            restaurants = db.get_all_restaurants()
+            
+            # --- FILTR: Lista dozwolonych restauracji ---
+            ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
+            
+            # Tworzymy listę nazw TYLKO dla aktywnych lokali
+            names = [r.get('name') for r in restaurants if r.get('name') in ACTIVE_VENUES]
+            
             response = (
                 "📞 Podaj nazwę restauracji, a podam Ci dane kontaktowe.\n\n"
-                "Dostępne lokale: Neon, Zielnik, Porto Azzurro"
+                "Dostępne lokale: " + ", ".join(names)
             )
             return jsonify({"response": response})
     
@@ -360,21 +500,25 @@ def chat():
             restaurant_name = CONTEXT["last_restaurant"]
         
         if restaurant_name:
-            details = RESTAURANT_DETAILS.get(restaurant_name)
-            if details:
-                CONTEXT["last_restaurant"] = restaurant_name
-                response = f"🕒 **{restaurant_name}** jest otwarte: **{details['hours']}**"
+            details_data = db.get_restaurant_details(restaurant_name)
+            if details_data:
+                CONTEXT["last_restaurant"] = details_data.get('name')
+                response = f"🕒 **{details_data.get('name')}** jest otwarte: **{details_data.get('hours', 'Brak danych')}**"
                 return jsonify({"response": response})
             else:
                 return jsonify({"response": f"❌ Nie mam informacji o godzinach dla {restaurant_name}."})
         else:
-            response = (
-                "🕒 **Typowe godziny otwarcia naszych lokali:**\n\n"
-                "• Neon: 09:00 - 23:00\n"
-                "• Porto Azzurro: 09:00 - 21:00\n"
-                "• Zielnik: 09:00 - 21:00\n\n"
-                "O który lokal pytasz konkretnie?"
-            )
+            # Pobierz godziny wszystkich restauracji
+            restaurants = db.get_all_restaurants()
+            
+            lines = ["🕒 **Godziny otwarcia naszych lokali:**\n"]
+            for r in restaurants:
+                name = r.get('name', 'Nieznana')
+                hours = r.get('hours', 'Brak danych')
+                lines.append(f"• {name}: {hours}")
+            
+            lines.append("\nO który lokal pytasz konkretnie?")
+            response = "\n".join(lines)
             return jsonify({"response": response})
     
     # --- CHECK_CAPACITY (Pojemność lokalu) ---
@@ -384,36 +528,44 @@ def chat():
             restaurant_name = CONTEXT["last_restaurant"]
         
         if restaurant_name:
-            details = RESTAURANT_DETAILS.get(restaurant_name)
-            if details:
-                CONTEXT["last_restaurant"] = restaurant_name
-                response = (
-                    f"🏠 **{restaurant_name}** posiada łącznie "
-                    f"**{details['max_tables']}** stolików.\n\n"
-                    f"Cechy lokalu: {', '.join(details.get('features', []))}"
-                )
+            details_data = db.get_restaurant_details(restaurant_name)
+            if details_data:
+                CONTEXT["last_restaurant"] = details_data.get('name')
+                max_tables = details_data.get('max_tables', 'N/A')
+                features = details_data.get('features', [])
+                
+                response = f"🏠 **{details_data.get('name')}** posiada łącznie **{max_tables}** stolików."
+                
+                if features and isinstance(features, list):
+                    response += f"\n\nCechy lokalu: {', '.join(features)}"
+                
                 return jsonify({"response": response})
             else:
                 return jsonify({"response": f"❌ Nie mam danych o pojemności dla {restaurant_name}."})
         else:
-            response = (
-                "🏠 **Pojemność naszych lokali:**\n\n"
-                "• Neon: 10 stolików\n"
-                "• Porto Azzurro: 15 stolików\n"
-                "• Zielnik: 6 stolików\n\n"
-                "O który lokal pytasz?"
-            )
+            # Pobierz pojemność wszystkich restauracji
+            restaurants = db.get_all_restaurants()
+            
+            lines = ["🏠 **Pojemność naszych lokali:**\n"]
+            for r in restaurants:
+                name = r.get('name', 'Nieznana')
+                max_tables = r.get('max_tables', 'N/A')
+                lines.append(f"• {name}: {max_tables} stolików")
+            
+            lines.append("\nO który lokal pytasz?")
+            response = "\n".join(lines)
             return jsonify({"response": response})
     
     # --- DOMYŚLNA OBSŁUGA NIEZNANEJ ENCJI ---
     if potential_unknown and not restaurant_name:
+        restaurants = db.get_all_restaurants()
+        names = [r.get('name') for r in restaurants if r.get('name')]
+        
         response = (
             "🧐 Przepraszam, nie rozpoznaję tej nazwy.\n\n"
-            "Obsługuję następujące lokale:\n"
-            "• 🍔 Neon\n"
-            "• 🍝 Porto Azzurro\n"
-            "• 🥗 Zielnik\n\n"
-            "Czy chodziło Ci o jeden z nich?"
+            "Obsługuję następujące lokale:\n" +
+            "\n".join([f"• {name}" for name in names]) +
+            "\n\nCzy chodziło Ci o jeden z nich?"
         )
         return jsonify({"response": response})
     
