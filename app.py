@@ -1,3 +1,4 @@
+
 # =============================================================================
 # APP.PY - Główna aplikacja Flask dla chatbota Hotable
 # Dane pobierane z Supabase
@@ -67,26 +68,38 @@ def detect_unknown_entity(message, restaurant_name):
 
 
 def format_restaurant_description(restaurant_data):
-    """Formatowanie opisu restauracji z danych bazy"""
+    """
+    Formatowanie opisu restauracji z danych bazy.
+    FIX: Używa `cuisine_type` (Array) zamiast `cuisine`.
+    """
     if not restaurant_data:
         return None
     
     name = restaurant_data.get('name', 'Nieznana')
-    cuisine = restaurant_data.get('cuisine', '')
+    # Używamy nowej kolumny `cuisine_type`
+    cuisine_types = restaurant_data.get('cuisine_type', [])
     description = restaurant_data.get('description', '')
+    
+    # Łączymy typy kuchni w string
+    cuisine_str = ", ".join(cuisine_types) if cuisine_types else "Brak info o kuchni"
     
     # Ikony dla typów kuchni
     cuisine_icons = {
-        "StreetFood": "🍔",
-        "Śródziemnomorska": "🍝",
-        "Polska": "🥗"
+        "Street Food": "🍔",
+        "Włoska": "🍝",
+        "Polska": "🥟",
+        "Europejska": "🇪🇺",
+        "Nowoczesna": "✨"
     }
-    icon = cuisine_icons.get(cuisine, "🍽️")
+    
+    # Wybieramy ikonę na podstawie pierwszego typu kuchni
+    primary_cuisine = cuisine_types[0] if cuisine_types else ""
+    icon = cuisine_icons.get(primary_cuisine, "🍽️")
     
     if description:
-        return f"{icon} **{name}** ({cuisine})\n\n{description}"
+        return f"{icon} **{name}** ({cuisine_str})\n\n{description}"
     else:
-        return f"{icon} **{name}** - Restauracja z kuchnią {cuisine}."
+        return f"{icon} **{name}** - Restauracja z kuchnią typu: {cuisine_str}."
 
 
 def format_restaurant_details(restaurant_data):
@@ -270,7 +283,6 @@ def chat():
     if intent == "list_restaurants":
         reset_context()
         
-        # Pobieranie listy restauracji z bazy
         restaurants = db.get_all_restaurants()
         
         # --- FILTR: Lista dozwolonych restauracji ---
@@ -278,28 +290,30 @@ def chat():
         
         if restaurants:
             cuisine_icons = {
-                "StreetFood": "🍔",
-                "Śródziemnomorska": "🍝",
-                "Polska": "🥗"
+                "Street Food": "🍔",
+                "Włoska": "🍝",
+                "Polska": "🥟",
+                "Europejska": "🇪🇺",
+                "Nowoczesna": "✨"
             }
             
             lines = ["🍽️ **Aktualnie dostępne restauracje:**\n"]
             
-            # Używamy licznika ręcznie, żeby numeracja była ciągła po filtracji
             counter = 1
-            
             for r in restaurants:
                 name = r.get('name', 'Nieznana')
                 
-                # --- FILTRACJA: Pomiń jeśli nie ma na liście ---
                 if name not in ACTIVE_VENUES:
                     continue
                 
-                cuisine = r.get('cuisine', '')
-                icon = cuisine_icons.get(cuisine, "🍽️")
+                # FIX: Używamy cuisine_type (Array)
+                cuisine_types = r.get('cuisine_type', [])
+                cuisine_str = ", ".join(cuisine_types) if cuisine_types else "Ogólna"
                 
-                # Dodajemy do listy tylko zweryfikowane lokale
-                lines.append(f"{counter}. {icon} **{name}** - {cuisine}")
+                primary_cuisine = cuisine_types[0] if cuisine_types else ""
+                icon = cuisine_icons.get(primary_cuisine, "🍽️")
+                
+                lines.append(f"{counter}. {icon} **{name}** - {cuisine_str}")
                 counter += 1
             
             lines.append("\nNapisz nazwę wybranego lokalu, aby sprawdzić szczegóły lub dostępność.")
@@ -311,31 +325,37 @@ def chat():
     
     # --- LIST_CUISINES (Rodzaje kuchni) ---
     if intent == "list_cuisines":
-        # Pobieranie unikalnych kuchni z bazy
         restaurants = db.get_all_restaurants()
         cuisines = set()
         cuisine_restaurants = {}
         
+        # FIX: Logika do obsługi cuisine_type (Array)
         for r in restaurants:
-            cuisine = r.get('cuisine')
             name = r.get('name')
-            if cuisine:
-                cuisines.add(cuisine)
-                if cuisine not in cuisine_restaurants:
-                    cuisine_restaurants[cuisine] = []
-                cuisine_restaurants[cuisine].append(name)
+            cuisine_types = r.get('cuisine_type', [])
+            
+            if not name or not cuisine_types:
+                continue
+
+            for c_type in cuisine_types:
+                cuisines.add(c_type)
+                if c_type not in cuisine_restaurants:
+                    cuisine_restaurants[c_type] = []
+                cuisine_restaurants[c_type].append(name)
         
         if cuisines:
             cuisine_icons = {
-                "StreetFood": "🍔",
-                "Śródziemnomorska": "🍝",
-                "Polska": "🥗"
+                "Street Food": "🍔",
+                "Włoska": "🍝",
+                "Polska": "🥟",
+                "Europejska": "🇪🇺",
+                "Nowoczesna": "✨"
             }
             
             lines = ["Mamy szeroki wybór smaków! 🌍\n\nOferujemy kuchnię:"]
             for cuisine in sorted(cuisines):
                 icon = cuisine_icons.get(cuisine, "🍽️")
-                restaurants_list = ", ".join(cuisine_restaurants.get(cuisine, []))
+                restaurants_list = ", ".join(sorted(list(set(cuisine_restaurants.get(cuisine, [])))))
                 lines.append(f"{icon} **{cuisine}** → {restaurants_list}")
             
             lines.append("\nKtóra Cię interesuje?")
@@ -347,22 +367,31 @@ def chat():
     
     # --- ASK_RECOMMENDATION (Rekomendacja) ---
     if intent == "ask_recommendation":
-        # Pobieranie restauracji z bazy do rekomendacji
         restaurants = db.get_all_restaurants()
         
         if restaurants:
             cuisine_icons = {
-                "StreetFood": "🍔",
-                "Śródziemnomorska": "🍝",
-                "Polska": "🥗"
+                "Street Food": "🍔",
+                "Włoska": "🍝",
+                "Polska": "🥟",
+                "Europejska": "🇪🇺",
+                "Nowoczesna": "✨"
             }
             
             lines = ["Zależy, na co masz ochotę! 😋\n"]
+            # FIX: Używamy cuisine_type (Array)
             for r in restaurants:
                 name = r.get('name', '')
-                cuisine = r.get('cuisine', '')
-                icon = cuisine_icons.get(cuisine, "🍽️")
-                lines.append(f"• {icon} **{cuisine}** → {name}")
+                cuisine_types = r.get('cuisine_type', [])
+                
+                if not name or not cuisine_types:
+                    continue
+
+                cuisine_str = ", ".join(cuisine_types)
+                primary_cuisine = cuisine_types[0]
+                icon = cuisine_icons.get(primary_cuisine, "🍽️")
+                
+                lines.append(f"• {icon} **{cuisine_str}** → {name}")
             
             lines.append("\nNa co się skusisz?")
             response = "\n".join(lines)
@@ -389,24 +418,21 @@ def chat():
             else:
                 return jsonify({"response": f"😔 Przepraszam, nie znalazłem aktywnych restauracji typu **{cuisine}** w naszej bazie."})
         else:
-            # Fallback to listing cuisines
-            return jsonify({"response": "Mamy szeroki wybór smaków! 😋\nOferujemy kuchnię:\n🇵🇱 **Polska** (Zielnik)\n🍝 **Śródziemnomorska** (Porto Azzurro)\n🍔 **StreetFood** (Neon)"})
+            # Fallback - odsyłamy do intencji `list_cuisines`
+            return list_cuisines()
 
     
     # --- RESTAURANT_INFO (Informacje o restauracji) ---
     if intent == "restaurant_info":
-        # Próba użycia kontekstu jeśli brak nazwy
         if not restaurant_name and CONTEXT.get("last_restaurant"):
             restaurant_name = CONTEXT["last_restaurant"]
         
         if restaurant_name:
-            # Pobieranie danych z bazy
             restaurant_data = db.get_restaurant_details(restaurant_name)
             
             if restaurant_data:
                 CONTEXT["last_restaurant"] = restaurant_data.get('name')
                 
-                # Formatowanie odpowiedzi
                 description = format_restaurant_description(restaurant_data)
                 details = format_restaurant_details(restaurant_data)
                 
@@ -419,7 +445,6 @@ def chat():
             else:
                 return jsonify({"response": f"❌ Nie znalazłem restauracji o nazwie {restaurant_name}."})
         else:
-            # Pobierz listę restauracji z bazy
             restaurants = db.get_all_restaurants()
             names = [r.get('name') for r in restaurants if r.get('name')]
             
@@ -432,7 +457,6 @@ def chat():
     
     # --- CHECK_SEATS (Sprawdzanie wolnych miejsc) ---
     if intent == "check_seats":
-        # Obsługa nieznanej nazwy
         if potential_unknown and not restaurant_name:
             restaurants = db.get_all_restaurants()
             names = [r.get('name') for r in restaurants if r.get('name')]
@@ -444,7 +468,6 @@ def chat():
             )
             return jsonify({"response": response})
         
-        # Próba użycia kontekstu
         if not restaurant_name and CONTEXT.get("last_restaurant"):
             restaurant_name = CONTEXT["last_restaurant"]
         
@@ -453,7 +476,6 @@ def chat():
     
     # --- CHECK_CONTACT (Dane kontaktowe) ---
     if intent == "check_contact":
-        # Próba użycia kontekstu
         if not restaurant_name and CONTEXT.get("last_restaurant"):
             restaurant_name = CONTEXT["last_restaurant"]
         
@@ -474,10 +496,7 @@ def chat():
         else:
             restaurants = db.get_all_restaurants()
             
-            # --- FILTR: Lista dozwolonych restauracji ---
             ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
-            
-            # Tworzymy listę nazw TYLKO dla aktywnych lokali
             names = [r.get('name') for r in restaurants if r.get('name') in ACTIVE_VENUES]
             
             response = (
@@ -488,7 +507,6 @@ def chat():
     
     # --- CHECK_HOURS (Godziny otwarcia) ---
     if intent == "check_hours":
-        # Próba użycia kontekstu
         if not restaurant_name and CONTEXT.get("last_restaurant"):
             restaurant_name = CONTEXT["last_restaurant"]
         
@@ -501,7 +519,6 @@ def chat():
             else:
                 return jsonify({"response": f"❌ Nie mam informacji o godzinach dla {restaurant_name}."})
         else:
-            # Pobierz godziny wszystkich restauracji
             restaurants = db.get_all_restaurants()
             
             lines = ["🕒 **Godziny otwarcia naszych lokali:**\n"]
@@ -516,7 +533,6 @@ def chat():
     
     # --- CHECK_CAPACITY (Pojemność lokalu) ---
     if intent == "check_capacity":
-        # Próba użycia kontekstu
         if not restaurant_name and CONTEXT.get("last_restaurant"):
             restaurant_name = CONTEXT["last_restaurant"]
         
@@ -536,7 +552,6 @@ def chat():
             else:
                 return jsonify({"response": f"❌ Nie mam danych o pojemności dla {restaurant_name}."})
         else:
-            # Pobierz pojemność wszystkich restauracji
             restaurants = db.get_all_restaurants()
             
             lines = ["🏠 **Pojemność naszych lokali:**\n"]
@@ -582,3 +597,4 @@ def chat():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')
+
