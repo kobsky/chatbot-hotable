@@ -166,14 +166,6 @@ def chat():
     """
     data = request.json
     user_message = data.get('message', '').strip()
-
-    # --- DIAGNOSTYKA BAZY DANYCH ---
-    if "debug_db" in user_message.lower() or "szukam" in user_message.lower():
-        all_rows = db.get_all_restaurants()
-        print("\n--- ZRZUT DANYCH Z BAZY (Kolumna 'cuisine') ---")
-        for r in all_rows:
-            print(f"Lokal: '{r.get('name')}' | Kuchnia w bazie: '{r.get('cuisine')}'")
-        print("-----------------------------------------------\n")
     
     if not user_message:
         return jsonify({"response": "Nie otrzymałem wiadomości. Spróbuj ponownie."})
@@ -354,51 +346,25 @@ def chat():
     
     # --- SEARCH_CUISINE (Szukanie po typie kuchni) ---
     if intent == "search_cuisine":
-        # --- DEBUG MODE START ---
-        print(f"DEBUG: Szukam kuchni: '{cuisine}'")
-        
-        # Lista aktywnych lokali (Hard Filter)
-        ACTIVE_VENUES = ["Neon", "Zielnik", "Porto Azzurro"]
-        
         if cuisine:
-            # 1. Pobranie z bazy
             results = db.get_restaurants_by_cuisine(cuisine)
-            print(f"DEBUG: Wyniki z bazy (surowe): {results}")
             
-            # 2. Filtracja po ACTIVE_VENUES
-            active_results = []
-            
-            # Zabezpieczenie: jeśli baza nic nie zwróciła, results może być None
             if results:
+                lines = [f"🔎 Oto lokale z kategorią **{cuisine}**:"]
                 for r in results:
-                    # Debugowanie nazw (czy nie ma spacji, literówek?)
-                    db_name = r.get('name')
-                    print(f"DEBUG: Sprawdzam lokal z bazy: '{db_name}' vs ACTIVE_VENUES")
-                    
-                    if db_name in ACTIVE_VENUES:
-                        active_results.append(r)
-                    else:
-                        print(f"DEBUG: Odrzucono '{db_name}' (nie ma na liście aktywnych)")
-            
-            print(f"DEBUG: Wyniki końcowe po filtracji: {active_results}")
-
-            if active_results:
-                # Logika wyświetlania listy
-                lines = [f"🔎 Oto lokale z kategorią **{cuisine}**:",]
-                for r in active_results:
                     icon = "🟢" if r.get('available_tables', 0) > 0 else "🔴"
                     lines.append(f"{icon} **{r['name']}**")
                 
-                # Zapisujemy kontekst (bierzemy pierwszy z listy jako domyślny)
-                if active_results:
-                    CONTEXT["last_restaurant"] = active_results[0]['name']
+                if results:
+                    CONTEXT["last_restaurant"] = results[0]['name']
                     
                 return jsonify({"response": "\n".join(lines)})
             else:
-                return jsonify({"response": f"😔 Przepraszam, nie znalazłem aktywnych restauracji typu **{cuisine}** w naszej bazie.\n(Debug Info: NLP='{cuisine}', Wynik Bazy={len(results) if results else 0}, Po filtrze={len(active_results)})"})
+                return jsonify({"response": f"😔 Przepraszam, nie znalazłem aktywnych restauracji typu **{cuisine}** w naszej bazie."})
         else:
-            # Obsługa intencji list_cuisines w ramach search (gdy user nie poda kuchni)
+            # Fallback to listing cuisines
             return jsonify({"response": "Mamy szeroki wybór smaków! 😋\nOferujemy kuchnię:\n🇵🇱 **Polska** (Zielnik)\n🍝 **Śródziemnomorska** (Porto Azzurro)\n🍔 **StreetFood** (Neon)"})
+
     
     # --- RESTAURANT_INFO (Informacje o restauracji) ---
     if intent == "restaurant_info":
