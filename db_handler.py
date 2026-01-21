@@ -1,189 +1,190 @@
 # =============================================================================
-# DB_HANDLER.PY - Obsługa bazy danych dla Hotable
+# DB_HANDLER.PY - Obsługa bazy danych Supabase dla Hotable (REST API)
 # =============================================================================
 
-import sqlite3
 import os
+import requests
 from typing import List, Dict, Optional
+from dotenv import load_dotenv
+
+# Ładowanie zmiennych środowiskowych
+load_dotenv()
 
 class DatabaseHandler:
     """
-    Klasa obsługująca operacje na bazie danych SQLite.
+    Klasa obsługująca operacje na bazie danych Supabase przez REST API.
     Przechowuje informacje o restauracjach i ich dostępności.
     """
     
-    def __init__(self, db_path: str = 'hotable.db'):
-        """Inicjalizacja połączenia z bazą danych"""
-        self.db_path = db_path
-        self._initialize_database()
-        print("✅ Baza danych załadowana")
-    
-    def _get_connection(self):
-        """Utworzenie nowego połączenia z bazą"""
-        return sqlite3.connect(self.db_path)
-    
-    def _initialize_database(self):
-        """Inicjalizacja struktury bazy danych i danych początkowych"""
-        conn = self._get_connection()
-        cursor = conn.cursor()
+    def __init__(self):
+        """Inicjalizacja połączenia z Supabase"""
+        self.supabase_url = os.getenv('SUPABASE_URL')
+        self.supabase_key = os.getenv('SUPABASE_KEY')
         
-        # Tworzenie tabeli restauracji
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS restaurants (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT UNIQUE NOT NULL,
-                cuisine TEXT NOT NULL,
-                available_tables INTEGER DEFAULT 0,
-                max_tables INTEGER DEFAULT 10,
-                phone TEXT,
-                address TEXT,
-                hours TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        if not self.supabase_url or not self.supabase_key:
+            raise ValueError("❌ Brak SUPABASE_URL lub SUPABASE_KEY w zmiennych środowiskowych!")
+        
+        # Bazowy URL dla REST API
+        self.rest_url = f"{self.supabase_url}/rest/v1"
+        
+        # Nagłówki dla wszystkich zapytań
+        self.headers = {
+            "apikey": self.supabase_key,
+            "Authorization": f"Bearer {self.supabase_key}",
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+        }
+        
+        # Test połączenia
+        if self._test_connection():
+            print("✅ Połączono z Supabase")
+        else:
+            print("⚠️ Supabase dostępne, ale tabela może być pusta")
+    
+    def _test_connection(self) -> bool:
+        """Test połączenia z bazą danych"""
+        try:
+            response = requests.get(
+                f"{self.rest_url}/restaurants?select=count",
+                headers=self.headers,
+                timeout=10
             )
-        ''')
-        
-        # Dane początkowe restauracji
-        initial_data = [
-            ('Neon', 'StreetFood', 4, 10, '+48 890 211 403', 'ul. Obłońska 4', '09:00 - 23:00'),
-            ('Porto Azzurro', 'Śródziemnomorska', 2, 15, '+48 912 901 733', 'ul. Podwale 7A', '09:00 - 21:00'),
-            ('Zielnik', 'Polska', 3, 6, '+48 730 100 200', 'ul. Wiosenna 14', '09:00 - 21:00')
-        ]
-        
-        for data in initial_data:
-            try:
-                cursor.execute('''
-                    INSERT OR IGNORE INTO restaurants 
-                    (name, cuisine, available_tables, max_tables, phone, address, hours)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', data)
-            except sqlite3.IntegrityError:
-                pass
-        
-        conn.commit()
-        conn.close()
+            return response.status_code == 200
+        except Exception as e:
+            print(f"❌ Błąd połączenia: {e}")
+            return False
+    
+    def _make_request(self, endpoint: str, method: str = "GET", params: dict = None, data: dict = None) -> Optional[List[Dict]]:
+        """Wykonanie zapytania do Supabase REST API"""
+        try:
+            url = f"{self.rest_url}/{endpoint}"
+            
+            if method == "GET":
+                response = requests.get(url, headers=self.headers, params=params, timeout=10)
+            elif method == "POST":
+                response = requests.post(url, headers=self.headers, json=data, timeout=10)
+            elif method == "PATCH":
+                response = requests.patch(url, headers=self.headers, params=params, json=data, timeout=10)
+            elif method == "DELETE":
+                response = requests.delete(url, headers=self.headers, params=params, timeout=10)
+            else:
+                return None
+            
+            if response.status_code in [200, 201]:
+                return response.json()
+            else:
+                print(f"⚠️ API Error: {response.status_code} - {response.text}")
+                return None
+                
+        except requests.exceptions.Timeout:
+            print("❌ Timeout połączenia z Supabase")
+            return None
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Błąd zapytania: {e}")
+            return None
     
     def get_all_restaurants(self) -> List[Dict]:
-        """Pobieranie wszystkich restauracji"""
-        conn = self._get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT name, cuisine, available_tables, max_tables, phone, address, hours
-            FROM restaurants
-            ORDER BY name
-        ''')
-        
-        rows = cursor.fetchall()
-        conn.close()
-        
-        return [
-            {
-                'name': row[0],
-                'cuisine': row[1],
-                'available_tables': row[2],
-                'max_tables': row[3],
-                'phone': row[4],
-                'address': row[5],
-                'hours': row[6]
-            }
-            for row in rows
-        ]
+        """Pobieranie wszystkich restauracji z Supabase"""
+        result = self._make_request("restaurants", params={"select": "*", "order": "name"})
+        return result if result else []
     
     def get_restaurants_by_cuisine(self, cuisine: str) -> List[Dict]:
-        """Pobieranie restauracji według typu kuchni"""
-        conn = self._get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT name, cuisine, available_tables, max_tables, phone, address, hours
-            FROM restaurants
-            WHERE cuisine = ? OR cuisine LIKE ?
-            ORDER BY name
-        ''', (cuisine, f'%{cuisine}%'))
-        
-        rows = cursor.fetchall()
-        conn.close()
-        
-        return [
-            {
-                'name': row[0],
-                'cuisine': row[1],
-                'available_tables': row[2],
-                'max_tables': row[3],
-                'phone': row[4],
-                'address': row[5],
-                'hours': row[6]
-            }
-            for row in rows
-        ]
+        """Pobieranie restauracji według typu kuchni (ignoruje wielkość liter)."""
+        result = self._make_request(
+            "restaurants",
+            params={"select": "*", "cuisine": f"ilike.{cuisine}"}
+        )
+        return result if result else []
     
     def check_availability(self, restaurant_name: str) -> Optional[Dict]:
         """Sprawdzanie dostępności stolików w konkretnej restauracji"""
-        conn = self._get_connection()
-        cursor = conn.cursor()
+        # Próba dokładnego dopasowania (case-insensitive)
+        result = self._make_request(
+            "restaurants",
+            params={"select": "*", "name": f"ilike.{restaurant_name}"}
+        )
         
-        cursor.execute('''
-            SELECT name, cuisine, available_tables, max_tables, phone, address, hours
-            FROM restaurants
-            WHERE LOWER(name) = LOWER(?)
-        ''', (restaurant_name,))
+        if result and len(result) > 0:
+            return result[0]
         
-        row = cursor.fetchone()
-        conn.close()
+        # Próba częściowego dopasowania
+        result = self._make_request(
+            "restaurants",
+            params={"select": "*", "name": f"ilike.%{restaurant_name}%"}
+        )
         
-        if row:
-            return {
-                'name': row[0],
-                'cuisine': row[1],
-                'available_tables': row[2],
-                'max_tables': row[3],
-                'phone': row[4],
-                'address': row[5],
-                'hours': row[6]
-            }
+        if result and len(result) > 0:
+            return result[0]
+        
         return None
-    
-    def update_availability(self, restaurant_name: str, available_tables: int) -> bool:
-        """Aktualizacja liczby dostępnych stolików"""
-        conn = self._get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            UPDATE restaurants
-            SET available_tables = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE LOWER(name) = LOWER(?)
-        ''', (available_tables, restaurant_name))
-        
-        affected_rows = cursor.rowcount
-        conn.commit()
-        conn.close()
-        
-        return affected_rows > 0
     
     def get_restaurant_details(self, restaurant_name: str) -> Optional[Dict]:
         """Pobieranie szczegółowych informacji o restauracji"""
         return self.check_availability(restaurant_name)
+    
+    def get_restaurant_description(self, restaurant_name: str) -> Optional[str]:
+        """Pobieranie opisu restauracji"""
+        result = self._make_request(
+            "restaurants",
+            params={"select": "description", "name": f"ilike.{restaurant_name}"}
+        )
+        
+        if result and len(result) > 0:
+            return result[0].get('description')
+        return None
+    
+    def update_availability(self, restaurant_name: str, available_tables: int) -> bool:
+        """Aktualizacja liczby dostępnych stolików"""
+        result = self._make_request(
+            "restaurants",
+            method="PATCH",
+            params={"name": f"ilike.{restaurant_name}"},
+            data={"available_tables": available_tables}
+        )
+        
+        return result is not None and len(result) > 0
 
 
 # =============================================================================
-# TESTY
+# TESTY POŁĄCZENIA
 # =============================================================================
 
 if __name__ == "__main__":
-    print("Test bazy danych...")
-    db = DatabaseHandler()
+    print("=" * 50)
+    print("TEST POŁĄCZENIA Z SUPABASE")
+    print("=" * 50)
     
-    print("\n📋 Wszystkie restauracje:")
-    for r in db.get_all_restaurants():
-        print(f"  - {r['name']}: {r['available_tables']}/{r['max_tables']} stolików")
-    
-    print("\n🍕 Restauracje śródziemnomorskie:")
-    for r in db.get_restaurants_by_cuisine("Śródziemnomorska"):
-        print(f"  - {r['name']}")
-    
-    print("\n🔍 Szczegóły Neon:")
-    details = db.check_availability("Neon")
-    if details:
-        print(f"  Dostępne stoliki: {details['available_tables']}")
-        print(f"  Telefon: {details['phone']}")
+    try:
+        db = DatabaseHandler()
+        
+        print("\n📋 Wszystkie restauracje:")
+        restaurants = db.get_all_restaurants()
+        if restaurants:
+            for r in restaurants:
+                name = r.get('name', 'N/A')
+                available = r.get('available_tables', 'N/A')
+                max_t = r.get('max_tables', 'N/A')
+                print(f"  - {name}: {available}/{max_t} stolików")
+        else:
+            print("  Brak danych lub pusta tabela")
+        
+        print("\n🍕 Test pobierania po kuchni (Polska):")
+        polish = db.get_restaurants_by_cuisine("Polska")
+        if polish:
+            for r in polish:
+                print(f"  - {r.get('name')}")
+        else:
+            print("  Brak wyników")
+        
+        print("\n🔍 Test sprawdzania dostępności (Neon):")
+        neon = db.check_availability("Neon")
+        if neon:
+            print(f"  Dostępne stoliki: {neon.get('available_tables')}")
+            print(f"  Telefon: {neon.get('phone')}")
+        else:
+            print("  Nie znaleziono")
+            
+        print("\n✅ Test zakończony!")
+        
+    except Exception as e:
+        print(f"\n❌ Błąd testu: {e}")
