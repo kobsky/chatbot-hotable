@@ -189,8 +189,7 @@ if __name__ == "__main__":
     try:
         db = DatabaseHandler()
         
-        print("
-📋 Wszystkie restauracje:")
+        print("\n📋 Wszystkie restauracje:")
         restaurants = db.get_all_restaurants()
         if restaurants:
             for r in restaurants:
@@ -201,8 +200,7 @@ if __name__ == "__main__":
         else:
             print("  Brak danych lub pusta tabela")
         
-        print("
-🍕 Test pobierania po kuchni (Polska):")
+        print("\n🍕 Test pobierania po kuchni (Polska):")
         polish = db.get_restaurants_by_cuisine("polska")
         if polish:
             for r in polish:
@@ -210,8 +208,7 @@ if __name__ == "__main__":
         else:
             print("  Brak wyników")
         
-        print("
-🔍 Test sprawdzania dostępności (Neon):")
+        print("\n🔍 Test sprawdzania dostępności (Neon):")
         neon = db.check_availability("Neon")
         if neon:
             print(f"  Dostępne stoliki: {neon.get('available_tables')}")
@@ -219,9 +216,7 @@ if __name__ == "__main__":
         else:
             print("  Nie znaleziono")
             
-        print("
-✅ Test zakończony!")
+        print("\n✅ Test zakończony!")
         
     except Exception as e:
-        print(f"
-❌ Błąd testu: {e}")
+        print(f"\n❌ Błąd testu: {e}")

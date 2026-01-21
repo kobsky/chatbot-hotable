@@ -1,5 +1,6 @@
 # =============================================================================
-# ENTITIES.PY - Rozbudowany słownik encji dla chatbota Hotable
+# ENTITIES.PY - Słowniki mapowań dla NLP (bez danych statycznych)
+# Dane restauracji są pobierane z Supabase
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -206,99 +207,6 @@ KW_RESTAURANTS = {
     "lokalu porto": "Porto Azzurro",
     "włoska restauracja": "Porto Azzurro",
     "włoskiej restauracji": "Porto Azzurro"
-}
-
-
-# -----------------------------------------------------------------------------
-# OPISY RESTAURACJI (RESTAURANT_DESCRIPTIONS)
-# Szczegółowe opisy dla każdej restauracji
-# -----------------------------------------------------------------------------
-
-RESTAURANT_DESCRIPTIONS = {
-    "Neon": (
-        "🍔 **NEON - Urban Kitchen**\n\n"
-        "Neon to pulsujące serce miejskiego smaku, gdzie energia miasta spotyka się "
-        "z kreatywną kuchnią uliczną.\n\n"
-        "**Menu:**\n"
-        "• Rzemieślnicze burgery z lokalnej wołowiny\n"
-        "• Egzotyczne bao buns\n"
-        "• Chrupiące tacos z autorskimi sosami\n"
-        "• Innowacyjne dania wegańskie\n\n"
-        "**Atmosfera:** Nowoczesna, miejska, energetyczna 🌃"
-    ),
-    
-    "Porto Azzurro": (
-        "🍝 **PORTO AZZURRO - Smaki Morza Śródziemnego**\n\n"
-        "Porto Azzurro to kulinarna podróż do słonecznej Italii i Grecji, "
-        "z nutą hiszpańskich smaków.\n\n"
-        "**Menu:**\n"
-        "• Świeże owoce morza\n"
-        "• Ręcznie robione pasty\n"
-        "• Chrupiące pizze z pieca opalanego drewnem\n"
-        "• Soczyste mięsa z grilla\n"
-        "• Świeże warzywa, zioła i najlepsza oliwa z oliwek\n\n"
-        "**Atmosfera:** Śródziemnomorska, romantyczna, elegancka 🌊"
-    ),
-    
-    "Zielnik": (
-        "🥗 **ZIELNIK - Tradycja spotyka nowoczesność**\n\n"
-        "Zielnik to restauracja, w której tradycja spotyka się z nowoczesnością. "
-        "Menu opiera się wyłącznie na świeżych, sezonowych produktach od lokalnych dostawców.\n\n"
-        "**Menu:**\n"
-        "• Klasyczne polskie dania w nowej odsłonie\n"
-        "• Sezonowe produkty z polskich pól i lasów\n"
-        "• Autorskie interpretacje tradycyjnych przepisów\n"
-        "• Domowe desery według babcinych receptur\n\n"
-        "**Atmosfera:** Przytulna, naturalna, rodzinna 🌿"
-    )
-}
-
-
-# -----------------------------------------------------------------------------
-# SZCZEGÓŁY RESTAURACJI (RESTAURANT_DETAILS)
-# Dane kontaktowe i informacje operacyjne
-# -----------------------------------------------------------------------------
-
-RESTAURANT_DETAILS = {
-    "Neon": {
-        "phone": "+48 890 211 403",
-        "address": "ul. Obłońska 4, 00-001 Warszawa",
-        "hours": "09:00 - 23:00 (Pon-Niedz)",
-        "max_tables": 10,
-        "cuisine": "StreetFood",
-        "price_range": "💰💰 (średni)",
-        "features": ["WiFi", "Na wynos", "Dostawa", "Karty płatnicze"]
-    },
-    "Porto Azzurro": {
-        "phone": "+48 912 901 733",
-        "address": "ul. Podwale 7A, 00-002 Warszawa",
-        "hours": "09:00 - 21:00 (Pon-Niedz)",
-        "max_tables": 15,
-        "cuisine": "Śródziemnomorska",
-        "price_range": "💰💰💰 (wyższy)",
-        "features": ["WiFi", "Ogródek", "Karty płatnicze", "Rezerwacje grupowe"]
-    },
-    "Zielnik": {
-        "phone": "+48 730 100 200",
-        "address": "ul. Wiosenna 14, 00-003 Warszawa",
-        "hours": "09:00 - 21:00 (Pon-Niedz)",
-        "max_tables": 6,
-        "cuisine": "Polska",
-        "price_range": "💰💰 (średni)",
-        "features": ["WiFi", "Dla rodzin z dziećmi", "Karty płatnicze", "Menu sezonowe"]
-    }
-}
-
-
-# -----------------------------------------------------------------------------
-# MAPOWANIE KUCHNI NA RESTAURACJE
-# Pomocnicza struktura do wyszukiwania
-# -----------------------------------------------------------------------------
-
-CUISINE_TO_RESTAURANT = {
-    "Polska": ["Zielnik"],
-    "StreetFood": ["Neon"],
-    "Śródziemnomorska": ["Porto Azzurro"]
 }
 
 
