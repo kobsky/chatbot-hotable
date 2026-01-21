@@ -88,13 +88,45 @@ class DatabaseHandler:
         result = self._make_request("restaurants", params={"select": "*", "order": "name"})
         return result if result else []
     
-    def get_restaurants_by_cuisine(self, cuisine: str) -> List[Dict]:
-        """Pobieranie restauracji według typu kuchni (ignoruje wielkość liter)."""
-        result = self._make_request(
-            "restaurants",
-            params={"select": "*", "cuisine": f"ilike.%{cuisine}%"}
-        )
-        return result if result else []
+    def get_restaurants_by_cuisine(self, cuisine_name: str) -> List[Dict]:
+        """
+        Pobiera restauracje pasujące do danej kuchni.
+        Naprawiono: Obsługa kolumny 'cuisine_type' (Array) oraz Case Insensitivity.
+        """
+        try:
+            # 1. Pobieramy WSZYSTKIE restauracje (dla małej bazy MVP to najbezpieczniejsza metoda filtrowania)
+            all_venues = self.get_all_restaurants()
+
+            matches = []
+            if not all_venues:
+                return matches
+
+            # Normalizujemy szukaną frazę (np. "włoska" -> "włoska")
+            target = cuisine_name.lower().strip()
+
+            # 2. Filtrujemy w Pythonie
+            for venue in all_venues:
+                # Pobieramy listę kuchni, np. ['Włoska', 'Pizza'] lub None
+                c_types = venue.get('cuisine_type', [])
+                
+                # Zabezpieczenie: jeśli w bazie jest null lub pusty string
+                if not c_types:
+                    continue
+                    
+                # Jeśli z jakiegoś powodu to nie lista, robimy z tego listę
+                if not isinstance(c_types, list):
+                    c_types = [str(c_types)]
+                
+                # Sprawdzamy czy nasza szukana kuchnia jest w tej liście (ignorując wielkość liter)
+                # Sprawdzamy: czy "włoska" jest w ["włoska", "pizza"]
+                if any(target in c.lower() for c in [str(x) for x in c_types]):
+                    matches.append(venue)
+            
+            return matches
+
+        except Exception as e:
+            print(f"❌ DB Error w get_restaurants_by_cuisine: {e}")
+            return []
     
     def check_availability(self, restaurant_name: str) -> Optional[Dict]:
         """Sprawdzanie dostępności stolików w konkretnej restauracji"""
@@ -157,7 +189,8 @@ if __name__ == "__main__":
     try:
         db = DatabaseHandler()
         
-        print("\n📋 Wszystkie restauracje:")
+        print("
+📋 Wszystkie restauracje:")
         restaurants = db.get_all_restaurants()
         if restaurants:
             for r in restaurants:
@@ -168,7 +201,8 @@ if __name__ == "__main__":
         else:
             print("  Brak danych lub pusta tabela")
         
-        print("\n🍕 Test pobierania po kuchni (Polska):")
+        print("
+🍕 Test pobierania po kuchni (Polska):")
         polish = db.get_restaurants_by_cuisine("polska")
         if polish:
             for r in polish:
@@ -176,7 +210,8 @@ if __name__ == "__main__":
         else:
             print("  Brak wyników")
         
-        print("\n🔍 Test sprawdzania dostępności (Neon):")
+        print("
+🔍 Test sprawdzania dostępności (Neon):")
         neon = db.check_availability("Neon")
         if neon:
             print(f"  Dostępne stoliki: {neon.get('available_tables')}")
@@ -184,7 +219,9 @@ if __name__ == "__main__":
         else:
             print("  Nie znaleziono")
             
-        print("\n✅ Test zakończony!")
+        print("
+✅ Test zakończony!")
         
     except Exception as e:
-        print(f"\n❌ Błąd testu: {e}")
+        print(f"
+❌ Błąd testu: {e}")
