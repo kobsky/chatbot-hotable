@@ -16,11 +16,28 @@
         "Hi",
         "Hello",
         "Rozpocznij",
-        "Hejka"
+        "Hejka",
+        "Siemka",
+        "Witaj",
+        "Halo",
+        "Joł",
+        "Yo",
+        "Helloł",
+        "Dobry",
+        "Dzionek",
+        "Miłego dnia",
+        "Cześć cześć",
+        "No cześć",
+        "Hej hej",
+        "Serwus",
+        "Moin",
+        "Heloł"
       ],
       "responses": [
-        "Dzień dobry! Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?",
-        "Cześć! Szukasz stolika czy konkretnej kuchni?"
+        "Dzień dobry! 👋 Jestem wirtualnym asystentem Hotable. W czym mogę pomóc?",
+        "Cześć! 😊 Szukasz stolika czy konkretnej kuchni?",
+        "Hej! 🍽️ Pomogę Ci znaleźć idealną restaurację. Czego szukasz?",
+        "Witaj w Hotable! 🌟 Sprawdzę dla Ciebie dostępność stolików lub polecę restaurację."
       ]
     },
     {
@@ -37,10 +54,29 @@
         "kim jesteś?",
         "w czym pomagasz?",
         "co tu mogę zrobić?",
-        "do czego służysz?"
+        "do czego służysz?",
+        "Czym się zajmujesz?",
+        "Jakie masz funkcje?",
+        "Co umiesz?",
+        "Jak możesz mi pomóc?",
+        "Co możesz dla mnie zrobić?",
+        "Jakie są twoje możliwości?",
+        "Przedstaw się",
+        "Kim ty jesteś?",
+        "Co to za bot?",
+        "Jaka jest twoja rola?",
+        "Po co tu jesteś?",
+        "Czego mogę się dowiedzieć?",
+        "Jakie informacje podajesz?",
+        "W czym mi pomożesz?",
+        "Co oferujesz?",
+        "Jakie usługi świadczysz?",
+        "Opowiedz o sobie",
+        "Przedstaw swoje funkcje"
       ],
       "responses": [
-        "Jestem Twoim kulinarnym asystentem. Pomogę Ci znaleźć idealną restaurację, sprawdzę dostępność stolików w czasie rzeczywistym i podpowiem, gdzie zjeść."
+        "Jestem Twoim kulinarnym asystentem Hotable! 🤖🍽️\n\nMogę:\n• 🔍 Pomóc znaleźć restaurację według kuchni\n• 📊 Sprawdzić dostępność stolików w czasie rzeczywistym\n• 📍 Podać adresy i dane kontaktowe lokali\n• 💡 Polecić miejsce na podstawie Twoich preferencji\n\nW czym mogę pomóc?",
+        "Jestem wirtualnym asystentem Hotable! Pomogę Ci:\n• Znaleźć idealną restaurację 🍝\n• Sprawdzić wolne stoliki 🪑\n• Podać informacje o lokalach 📋\n\nZapytaj mnie o cokolwiek związanego z naszymi restauracjami!"
       ]
     },
     {
@@ -52,10 +88,29 @@
         "Rezerwacja",
         "Zarezerwuj mi",
         "Chcę zamówić stolik",
-        "Umów mnie"
+        "Umów mnie",
+        "Chcę zarezerwować",
+        "Rezerwuję stolik",
+        "Mogę zarezerwować?",
+        "Czy mogę zabukować stolik?",
+        "Booking",
+        "Zarezerwuj na wieczór",
+        "Stolik na jutro",
+        "Chcę stolik na",
+        "Rezerwacja na godzinę",
+        "Zarezerwuj na sobotę",
+        "Potrzebuję rezerwacji",
+        "Czy można zarezerwować?",
+        "Jak zarezerwować stolik?",
+        "Gdzie mogę zarezerwować?",
+        "Chcę zrobić rezerwację",
+        "Proszę o rezerwację",
+        "Rezerwacja stolika",
+        "Bukowanie stolika",
+        "Zarezerwuj mi miejsce"
       ],
       "responses": [
-        "Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym. Aby dokonać rezerwacji, skontaktuj się bezpośrednio z lokalem lub użyj przycisku na stronie."
+        "📋 Jako wirtualny asystent pomagam sprawdzić dostępność stolików w czasie rzeczywistym.\n\nAby dokonać rezerwacji:\n• 📞 Zadzwoń bezpośrednio do lokalu\n• 🌐 Użyj przycisku rezerwacji na stronie\n\nMogę podać Ci numer telefonu do wybranej restauracji!"
       ]
     },
     {
@@ -64,7 +119,6 @@
         "Jestem głodny",
         "Szukam restauracji",
         "Gdzie zjem?",
-        "Szukam restauracji",
         "Gdzie zjem tanio?",
         "Pokaż restauracje z kuchnią polską",
         "Chcę zjeść coś włoskiego",
@@ -72,8 +126,10 @@
         "Jakiś dobry burger?",
         "Polska",
         "Polskiej",
+        "Polską",
         "Włoska",
         "Włoskiej",
+        "Włoską",
         "Burger",
         "Pizza",
         "a z kuchni streetfood",
@@ -82,11 +138,48 @@
         "kuchnia uliczna",
         "zjadłbym burgera",
         "coś szybkiego",
-        "szukam streetfoodu"
+        "szukam streetfoodu",
+        "Mam ochotę na",
+        "Chcę zjeść",
+        "Szukam miejsca z",
+        "Gdzie dostanę",
+        "Kto ma",
+        "Restauracja z kuchnią",
+        "Lokal z jedzeniem",
+        "Szukam kuchni",
+        "Interesuje mnie kuchnia",
+        "Chciałbym zjeść",
+        "Na co pójść zjeść",
+        "Gdzie na obiad",
+        "Gdzie na kolację",
+        "Gdzie na lunch",
+        "Polskie jedzenie",
+        "Włoskie jedzenie",
+        "Amerykańskie żarcie",
+        "Coś na szybko",
+        "Szybkie jedzenie",
+        "Fast food",
+        "Fastfood",
+        "Domowe jedzenie",
+        "Tradycyjne jedzenie",
+        "Mam ochotę na pizzę",
+        "Chcę burgera",
+        "Szukam pierogów",
+        "Gdzie zjem pierogi",
+        "Mam ochotę na kuchnię polską",
+        "Szukam włoskiej",
+        "Gdzie zjem streetfood",
+        "Śródziemnomorska",
+        "Kuchnia śródziemnomorska",
+        "Śródziemnomorskie",
+        "Owoce morza",
+        "Makarony",
+        "Makaron",
+        "Pasta"
       ],
       "responses": [
-        "Jasne, jakiej kuchni szukasz?",
-        "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje (np. polska, włoska)?"
+        "Jasne! 🍴 Jakiej kuchni szukasz?",
+        "Mogę poszukać restauracji. Jaki typ kuchni Cię interesuje?\n• 🇵🇱 Polska\n• 🍝 Włoska/Śródziemnomorska\n• 🍔 StreetFood"
       ]
     },
     {
@@ -103,10 +196,41 @@
         "Ile jest miejsc w Neonie?",
         "Stan stolików",
         "Sprawdź dostępność Neon",
-        "Gdzie zjem od ręki?"
+        "Gdzie zjem od ręki?",
+        "Ile stolików?",
+        "Wolne stoliki",
+        "Dostępność stolików",
+        "Czy są wolne stoliki?",
+        "Ile miejsc jest wolnych?",
+        "Jaka dostępność?",
+        "Wolne miejsca",
+        "Stan dostępności",
+        "Gdzie jest wolne?",
+        "Gdzie znajdę stolik?",
+        "Czy mają wolne?",
+        "Ile wolnych?",
+        "Czy są jeszcze miejsca?",
+        "Jaka jest dostępność w",
+        "Sprawdź miejsca w",
+        "Wolne stoliki w",
+        "Dostępność w",
+        "Ile stolików w Neonie",
+        "Ile stolików w Zielniku",
+        "Ile stolików w Porto",
+        "Ile stolików w Porto Azzurro",
+        "Czy Neon ma miejsca?",
+        "Czy Zielnik ma miejsca?",
+        "Czy Porto Azzurro ma miejsca?",
+        "Gdzie teraz wolne?",
+        "Gdzie można usiąść?",
+        "Która restauracja ma wolne stoliki?",
+        "Sprawdź wolne",
+        "Pokaż wolne stoliki",
+        "Status stolików",
+        "Miejsca w restauracji"
       ],
       "responses": [
-        "Niestety, to jest poza moim zakresem, daj znać czy mogę pomóc w czymś innym?"
+        "Sprawdzam dostępność stolików..."
       ]
     },
     {
@@ -117,7 +241,30 @@
         "Godziny otwarcia Neon",
         "Do której czynne Porto Azzurro?",
         "Kiedy otwieracie?",
-        "W jakich godzinach działa Zielnik?"
+        "W jakich godzinach działa Zielnik?",
+        "Godziny otwarcia",
+        "Do której otwarte?",
+        "O której otwieracie?",
+        "O której zamykacie?",
+        "Kiedy zamknięte?",
+        "Czy teraz otwarte?",
+        "Czy dziś otwarte?",
+        "Do której godziny?",
+        "Od której godziny?",
+        "Godziny pracy",
+        "Kiedy czynne?",
+        "Czy są otwarci?",
+        "Jaki mają harmonogram?",
+        "Kiedy mogę przyjść?",
+        "Do której działa Neon?",
+        "O której otwiera się Zielnik?",
+        "Godziny Porto Azzurro",
+        "Czy w weekend otwarte?",
+        "Czy w sobotę czynne?",
+        "Do której w piątek?"
+      ],
+      "responses": [
+        "Podaję godziny otwarcia..."
       ]
     },
     {
@@ -136,10 +283,40 @@
         "co wies o neonie?",
         "opisz neon",
         "a neon?",
-        "knajpa neon"
+        "knajpa neon",
+        "Opowiedz o tym miejscu",
+        "Co to za lokal?",
+        "Opisz ten lokal",
+        "Jaki to lokal?",
+        "Co serwują w",
+        "Czym się wyróżnia",
+        "Jaka jest specjalność",
+        "Co mają w menu",
+        "Opis lokalu",
+        "Charakterystyka restauracji",
+        "Opowiedz więcej o",
+        "Co wiesz o tym miejscu",
+        "Przedstaw restaurację",
+        "Jakie to miejsce",
+        "Szczegóły o restauracji",
+        "Info o lokalu",
+        "Informacje o restauracji",
+        "Co to za restauracja",
+        "Powiedz o Neonie",
+        "Powiedz o Zielniku",
+        "Powiedz o Porto Azzurro",
+        "Opis Neonu",
+        "Opis Porto Azzurro",
+        "Jaki jest Neon?",
+        "Jaki jest Zielnik?",
+        "Jakie jest Porto Azzurro?",
+        "Co oferuje Neon?",
+        "Co oferuje Zielnik?",
+        "Co oferuje Porto Azzurro?",
+        "Opowiedz o tej restauracji"
       ],
       "responses": [
-        ""
+        "Podaję opis restauracji..."
       ]
     },
     {
@@ -159,11 +336,39 @@
         "Jaki tam jest numer?",
         "Numer telefonu poproszę",
         "Podaj adres",
-        "Gdzie to jest?",
         "Jaki jest numer?",
         "Adres poproszę",
         "adres neonu",
-        "telefon do neonu"
+        "telefon do neonu",
+        "Kontakt",
+        "Dane kontaktowe",
+        "Jak się skontaktować?",
+        "Telefon do restauracji",
+        "Adres restauracji",
+        "Lokalizacja",
+        "Gdzie znajduje się",
+        "Pod jakim adresem",
+        "Numer kontaktowy",
+        "Jak zadzwonić",
+        "Gdzie mieści się",
+        "Gdzie szukać",
+        "Adres i telefon",
+        "Dane adresowe",
+        "Telefon i adres",
+        "Jak dojść do",
+        "Gdzie jest Neon?",
+        "Gdzie jest Zielnik?",
+        "Telefon do Zielnika",
+        "Telefon do Porto Azzurro",
+        "Adres Porto Azzurro",
+        "Gdzie mieści się Neon?",
+        "Podaj kontakt do",
+        "Kontakt do Neonu",
+        "Kontakt do Zielnika",
+        "Kontakt do Porto Azzurro"
+      ],
+      "responses": [
+        "Podaję dane kontaktowe..."
       ]
     },
     {
@@ -173,7 +378,26 @@
         "Czy to duży lokal?",
         "Jaka jest pojemność Neonu?",
         "Dużo macie miejsca?",
-        "Maksymalna liczba gości"
+        "Maksymalna liczba gości",
+        "Ile osób może pomieścić?",
+        "Jak duża jest restauracja?",
+        "Ile stolików łącznie?",
+        "Pojemność restauracji",
+        "Wielkość lokalu",
+        "Ile miejsc siedzących?",
+        "Maksymalna pojemność",
+        "Ile osób się zmieści?",
+        "Jak dużo stolików?",
+        "Rozmiar restauracji",
+        "Czy to mały lokal?",
+        "Ile stolików ma Neon?",
+        "Ile stolików ma Zielnik?",
+        "Ile stolików ma Porto Azzurro?",
+        "Pojemność Zielnika",
+        "Pojemność Porto Azzurro"
+      ],
+      "responses": [
+        "Podaję informacje o pojemności..."
       ]
     },
     {
@@ -194,10 +418,29 @@
         "Indyjska",
         "Kebab",
         "Turecka",
-        "Amerykańska"
+        "Amerykańska",
+        "Tajska",
+        "Wietnamska",
+        "Koreańska",
+        "Arabska",
+        "Hiszpańska",
+        "Portugalska",
+        "Brazylijska",
+        "Argentyńska",
+        "Hinduska",
+        "Chińskie jedzenie",
+        "Japońskie jedzenie",
+        "Ramen",
+        "Pho",
+        "Kuchnia tajska",
+        "Kuchnia azjatycka",
+        "Kuchnia meksykańska",
+        "Tacos meksykańskie",
+        "Kuchnia indyjska",
+        "Curry indyjskie"
       ],
       "responses": [
-        "Niestety nie mamy tej kuchni w bazie. Aktualnie dostępne kuchnie to: Polska, StreetFood i Włoska. Mogę zaproponować restaurację z którejś z tych kuchni?"
+        "Niestety tej kuchni nie mamy w bazie. 😔\n\nAktualnie dostępne kuchnie to:\n• 🇵🇱 Polska (Zielnik)\n• 🍝 Włoska/Śródziemnomorska (Porto Azzurro)\n• 🍔 StreetFood (Neon)\n\nCzy mogę zaproponować jedną z nich?"
       ]
     },
     {
@@ -206,9 +449,31 @@
         "Pokaż listę restauracji",
         "Jakie macie lokale",
         "Wymień restauracje",
-        "Jakaś inna?"
+        "Jakaś inna?",
+        "Jakie restauracje są dostępne?",
+        "Lista lokali",
+        "Co macie w ofercie?",
+        "Jakie lokale obsługujecie?",
+        "Pokaż wszystkie restauracje",
+        "Wszystkie lokale",
+        "Jakie są opcje?",
+        "Co możesz polecić?",
+        "Wymień wszystkie lokale",
+        "Jakie miejsca macie?",
+        "Lista restauracji",
+        "Gdzie mogę zjeść?",
+        "Jakie mamy wybory?",
+        "Pokaż opcje",
+        "Co jest dostępne?",
+        "Jakie restauracje?",
+        "Które restauracje obsługujesz?",
+        "Pokaż mi restauracje",
+        "Wylistuj restauracje",
+        "Jakie knajpy macie?"
       ],
-      "responses": []
+      "responses": [
+        "Oto lista dostępnych restauracji..."
+      ]
     },
     {
       "tag": "out_of_scope",
@@ -218,17 +483,54 @@
         "Stany Zjednoczone",
         "Jak dojechać do Warszawy",
         "zamów taksówkę",
-        "która godzina"
+        "która godzina",
+        "Pogoda",
+        "Prognoza pogody",
+        "Wyniki sportowe",
+        "Kto wygrał mecz?",
+        "Polityka",
+        "Wiadomości",
+        "News",
+        "Giełda",
+        "Kryptowaluty",
+        "Bitcoin",
+        "Forex",
+        "Samochody",
+        "Zakupy online",
+        "Amazon",
+        "Allegro",
+        "Kino",
+        "Film",
+        "Serial",
+        "Muzyka",
+        "Koncert",
+        "Podróże",
+        "Wakacje",
+        "Lot",
+        "Hotel",
+        "Uber",
+        "Taxi",
+        "Bolt",
+        "Ile kosztuje dolar?",
+        "Jaki jest kurs euro?",
+        "Gdzie kupię buty?",
+        "Opowiedz dowcip",
+        "Zaśpiewaj piosenkę",
+        "Napisz wiersz",
+        "Historia Polski",
+        "Kto to był Napoleon?",
+        "Stolica Francji",
+        "Ile lat ma Ziemia?"
       ],
       "responses": [
-        "Przepraszam, ale mogę odpowiadać tylko na pytania związane z restauracjami i rezerwacją stolików."
+        "Przepraszam, ale jestem asystentem restauracyjnym Hotable. 🍽️\n\nMogę pomóc tylko w kwestiach związanych z:\n• 🔍 Wyszukiwaniem restauracji\n• 🪑 Sprawdzaniem dostępności stolików\n• 📍 Informacjami o lokalach\n\nCzy mogę pomóc w czymś z tego zakresu?"
       ]
     },
     {
       "tag": "fallback",
       "patterns": [],
       "responses": [
-        "Błąd połączenia z serwerem 😞 Sprawdź czy plik app.py działa."
+        "Przepraszam, nie do końca zrozumiałem. 🤔\n\nSpróbuj zapytać np.:\n• \"Szukam włoskiej\"\n• \"Gdzie są wolne miejsca?\"\n• \"Pokaż listę lokali\"\n• \"Opowiedz o Neonie\""
       ]
     },
     {
@@ -242,9 +544,32 @@
         "Nie wiem co wybrać",
         "Pomóż mi wybrać",
         "Co polecasz?",
-        "Nie wiem co zjeść"
+        "Nie wiem co zjeść",
+        "Doradź mi coś",
+        "Co byś polecił?",
+        "Która restauracja jest najlepsza?",
+        "Gdzie warto iść?",
+        "Jaka restauracja jest dobra?",
+        "Co jest godne polecenia?",
+        "Masz jakieś rekomendacje?",
+        "Polecisz coś?",
+        "Co warto zjeść?",
+        "Gdzie najlepiej?",
+        "Którą restaurację wybrać?",
+        "Twoja rekomendacja?",
+        "Zasugeruj restaurację",
+        "Zasugeruj coś",
+        "Jaka restauracja?",
+        "Pomóż wybrać restaurację",
+        "Nie mogę się zdecydować",
+        "Ciężko wybrać",
+        "Trudny wybór",
+        "Podpowiedz mi",
+        "Daj wskazówkę"
       ],
-      "responses": []
+      "responses": [
+        "Zależy, na co masz ochotę! 😋\n\n• 🇵🇱 Kuchnia Polska → Zielnik\n• 🍝 Włoska/Śródziemnomorska → Porto Azzurro\n• 🍔 StreetFood/Burgery → Neon\n\nNa co się skusisz?"
+      ]
     },
     {
       "tag": "list_cuisines",
@@ -254,9 +579,73 @@
         "Co serwujecie?",
         "Wybór kuchni",
         "Kategorie jedzenia",
-        "Jakie jedzenie"
+        "Jakie jedzenie",
+        "Jakie kuchnie są dostępne?",
+        "Jakie typy kuchni?",
+        "Co macie do jedzenia?",
+        "Jakie style kulinarne?",
+        "Rodzaje kuchni",
+        "Typy restauracji",
+        "Kategorie kulinarne",
+        "Jakie opcje jedzenia?",
+        "Co można zjeść?",
+        "Jakie jedzenie serwujecie?",
+        "Wybór jedzenia",
+        "Menu ogólne",
+        "Jakie dania serwujecie?",
+        "Kuchnie świata"
       ],
-      "responses": []
+      "responses": [
+        "Mamy szeroki wybór smaków! 🌍\n\nOferujemy kuchnię:\n• 🇵🇱 **Polską** → Zielnik\n• 🇮🇹 **Włoską/Śródziemnomorską** → Porto Azzurro\n• 🍔 **StreetFood** → Neon\n\nKtóra Cię interesuje?"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Dziękuję",
+        "Dzięki",
+        "Dziękuję bardzo",
+        "Dzięki wielkie",
+        "Super, dzięki",
+        "Ok, dzięki",
+        "Dobra, dzięki",
+        "Thx",
+        "Thanks",
+        "Dziena",
+        "Dzięks",
+        "To wszystko, dzięki",
+        "Świetnie, dzięki",
+        "Fajnie, dzięki"
+      ],
+      "responses": [
+        "Nie ma za co! 😊 Smacznego i do zobaczenia w jednym z naszych lokali!",
+        "Proszę bardzo! 🍽️ Jeśli będziesz mieć więcej pytań, jestem do dyspozycji.",
+        "Cieszę się, że mogłem pomóc! 👋 Życzymy udanej wizyty!"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Do widzenia",
+        "Pa",
+        "Papa",
+        "Nara",
+        "Do zobaczenia",
+        "Bye",
+        "Cześć",
+        "Na razie",
+        "Trzymaj się",
+        "Lecę",
+        "Muszę iść",
+        "Koniec rozmowy",
+        "To tyle",
+        "Zamykam"
+      ],
+      "responses": [
+        "Do zobaczenia! 👋 Smacznego!",
+        "Pa pa! 🍽️ Zapraszamy ponownie!",
+        "Do widzenia! Życzymy udanej wizyty w restauracji! 😊"
+      ]
     }
   ]
 }
