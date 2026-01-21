@@ -71,6 +71,9 @@ def chat():
         response_text = bot.get_response(intent)
         return jsonify({"response": response_text})
 
+    if intent == "book_table":
+        return jsonify({"response": "Przykro mi, to zadanie wykracza poza mój zakres."})
+
     if intent == 'search_cuisine':
         CONTEXT["last_restaurant"] = None
         if cuisine:
