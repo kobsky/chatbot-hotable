@@ -1,6 +1,8 @@
 import json
 import random
 import numpy as np
+import unicodedata
+import re
 # Biblioteki do Machine Learningu (Realizacja L9 i L12)
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -14,6 +16,16 @@ class ChatbotBrain:
         self.model = None
         self.intents_data = {}
         self.load_data_and_train()
+
+    def normalize_text(self, text):
+        if not text:
+            return ""
+        # Lowercase, usuwanie polskich znaków (NFD) i interpunkcji
+        text = text.lower()
+        text = unicodedata.normalize('NFD', text)
+        text = "".join([c for c in text if unicodedata.category(c) != 'Mn'])
+        text = re.sub(r'[^\w\\s]', '', text)
+        return text.strip()
 
     def load_data_and_train(self):
         """
@@ -33,7 +45,7 @@ class ChatbotBrain:
         # Przygotowanie danych do scikit-learn
         for intent in self.intents_data['intents']:
             for pattern in intent['patterns']:
-                training_sentences.append(pattern)
+                training_sentences.append(self.normalize_text(pattern))
                 training_labels.append(intent['tag'])
 
         # TWORZENIE POTOKU (PIPELINE) - Realizacja L9
@@ -50,6 +62,11 @@ class ChatbotBrain:
         if not self.model:
             return "fallback"
 
+        # Normalizujemy tekst użytkownika tak samo jak dane treningowe
+        text = self.normalize_text(text)
+        if not text:
+            return "fallback"
+
         # Używamy predict_proba zamiast predict
         probabilities = self.model.predict_proba([text])[0]
         max_proba = np.max(probabilities)
@@ -58,7 +75,7 @@ class ChatbotBrain:
         # Debug print (pomocny przy testach)
         print(f"DEBUG: Text='{text}', Max Proba={max_proba:.2f}, Intent={self.model.classes_[best_intent_index]}")
 
-        if max_proba < 0.35:
+        if max_proba < 0.25:
             return "fallback"
         else:
             return self.model.classes_[best_intent_index]
@@ -98,8 +115,7 @@ class ChatbotBrain:
 if __name__ == "__main__":
     bot = ChatbotBrain()
     
-    print("
---- TEST SILNIKA NLP ---")
+    print("--- TEST SILNIKA NLP ---")
     test_phrases = [
         "Cześć, jestem głodny",
         "Szukam kuchni włoskiej",
